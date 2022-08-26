@@ -1,0 +1,100 @@
+@import "./colors";
+
+.mainSection {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.error {
+  font-size: 14px;
+  color: red;
+  margin-top: 1rem;
+}
+
+.line {
+  position: absolute;
+  top: auto;
+  width: 2px;
+  height: calc(100vh - 98px);
+  background-color: $dark;
+  border-radius: 3px;
+
+  &::before {
+    content: " ";
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: $dark;
+    border-radius: 20px;
+  }
+}
+
+.heroImg {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.chooseCandidate {
+  max-width: 400px;
+  width: 100%;
+  height: fit-content;
+  margin: 0 auto;
+  white-space: wrap;
+  text-align: center;
+  z-index: 2;
+  background-color: rgba($bg-color, 0.25);
+  padding: 3rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(4px);
+
+  h1 {
+    font-size: 35px;
+  }
+  .inputWrapper {
+    margin: 1.5rem 0;
+  }
+  input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 50px;
+    border: none;
+    background: $light;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+    transition: 0.2s ease;
+
+    &:focus {
+      box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    &::placeholder {
+      color: rgba($dark, 0.8);
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: 0.8rem 3rem;
+    border: none;
+    background-color: $main;
+    border-radius: 50px;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(0.9);
+      box-shadow: 0 0 20px 0 $main;
+    }
+  }
+}

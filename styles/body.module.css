@@ -1,0 +1,104 @@
+.mainSection {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.error {
+  font-size: 14px;
+  color: red;
+  margin-top: 1rem;
+}
+
+.line {
+  position: absolute;
+  top: auto;
+  width: 2px;
+  height: calc(100vh - 98px);
+  background-color: #07070f;
+  border-radius: 3px;
+}
+.line::before {
+  content: " ";
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #07070f;
+  border-radius: 20px;
+}
+
+.heroImg {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  z-index: 1;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  pointer-events: none;
+}
+
+.chooseCandidate {
+  max-width: 400px;
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin: 0 auto;
+  white-space: wrap;
+  text-align: center;
+  z-index: 2;
+  background-color: rgba(248, 248, 248, 0.25);
+  padding: 3rem;
+  border-radius: 1rem;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+}
+.chooseCandidate h1 {
+  font-size: 35px;
+}
+.chooseCandidate .inputWrapper {
+  margin: 1.5rem 0;
+}
+.chooseCandidate input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 50px;
+  border: none;
+  background: #fff;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+  transition: 0.2s ease;
+}
+.chooseCandidate input:focus {
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+}
+.chooseCandidate input::-moz-placeholder {
+  color: rgba(7, 7, 15, 0.8);
+}
+.chooseCandidate input:-ms-input-placeholder {
+  color: rgba(7, 7, 15, 0.8);
+}
+.chooseCandidate input::placeholder {
+  color: rgba(7, 7, 15, 0.8);
+}
+.chooseCandidate button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 0.8rem 3rem;
+  border: none;
+  background-color: #f37168;
+  border-radius: 50px;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.chooseCandidate button:hover {
+  transform: scale(0.9);
+  box-shadow: 0 0 20px 0 #f37168;
+}
