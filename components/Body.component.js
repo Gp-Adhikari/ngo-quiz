@@ -10,92 +10,105 @@ import gsap, { Power2 } from "gsap";
 const Body = () => {
   const { candidateName, setCandidateName } = useContext(DataContext);
 
-  const { initialAnimationHandler, setInitialAnimationHandler } =
+  const { initialAnimationHandler, setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
 
   const imgRef = useRef(null);
   const formRef = useRef(null);
   const lineRef = useRef(null);
+  const quizContainerRef = useRef(null);
 
   const [width, setWidth] = useState(undefined);
   const [height, setHeight] = useState(undefined);
 
   const [error, setError] = useState("");
-
-  const tl = new gsap.timeline();
-
   //set height of screen
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWidth(window.innerWidth);
-      setHeight(window.innerHeight);
-    }
+    try {
+      if (typeof window !== "undefined") {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+      }
+    } catch (error) {}
   }, []);
 
   useEffect(() => {
-    if (width === undefined) return;
-    if (height === undefined) return;
-    if (imgRef === null) return;
+    try {
+      if (width === undefined) return;
+      if (height === undefined) return;
+      if (imgRef === null) return;
 
-    const img = imgRef.current;
+      const img = imgRef.current;
 
-    if (height > 995) {
-      img.style.width = `995px`;
-      img.style.height = `488px`;
-      return;
-    }
+      if (height > 995) {
+        img.style.width = `995px`;
+        img.style.height = `488px`;
+        return;
+      }
 
-    img.style.width = `${height}px`;
-    img.style.height = `${height / 2}px`;
+      img.style.width = `${height}px`;
+      img.style.height = `${height / 2}px`;
+    } catch (error) {}
   }, [height, width, imgRef]);
 
   //on candidate's name submit
   const submitName = (e) => {
     e.preventDefault();
-    if (candidateName === "") {
-      setError("empty");
-      return;
-    }
+    try {
+      setInitialAnimationHandler(true);
+      const tl = new gsap.timeline();
 
-    if (candidateName.length > 100) {
-      setError("maxLimit");
-      return;
-    }
+      if (candidateName === "") {
+        setError("empty");
+        return;
+      }
 
-    if (candidateName.length < 2) {
-      setError("minLimit");
-      return;
-    }
+      if (candidateName.length > 100) {
+        setError("maxLimit");
+        return;
+      }
 
-    setError("");
-    setInitialAnimationHandler(true);
+      if (candidateName.length < 2) {
+        setError("minLimit");
+        return;
+      }
 
-    //run animation after 300 ms to let header disappear first
-    setTimeout(() => {
-      tl.to(formRef.current.children, 0.3, {
-        y: -20,
-        opacity: 0,
-        stagger: {
-          each: 0.1,
-          ease: Power2.easeInOut,
-        },
-      })
-        .to(formRef.current, 0.1, { display: "none" })
-        .to(imgRef.current, 0.3, { y: -50, opacity: 0 })
-        .to(lineRef.current, 0.5, {
-          top: 0,
-          height: "100vh",
-          ease: Power2.easeInOut,
+      setError("");
+      setInitialAnimationHandler(true);
+
+      setTimeout(() => {
+        tl.to(headerRef.current, 0.3, {
+          opacity: 0,
         })
-        .to(lineRef.current, 0.5, {
-          width: "100%",
-          ease: Power2.easeInOut,
-        })
-        .to(lineRef.current, 0.3, {
-          left: 0,
-          ease: Power2.easeInOut,
-        });
-    }, 300);
+          .to(formRef.current.children, 0.3, {
+            y: -20,
+            opacity: 0,
+            stagger: {
+              each: 0.1,
+              ease: Power2.easeInOut,
+            },
+          })
+          .to(formRef.current, 0.1, { display: "none" })
+          .to(imgRef.current, 0.3, { y: -50, opacity: 0 })
+          .to(lineRef.current, 0.5, {
+            top: 0,
+            height: "100vh",
+            ease: Power2.easeInOut,
+          })
+          .to(lineRef.current, 0.5, {
+            left: 0,
+            width: "100%",
+            ease: Power2.easeInOut,
+          })
+          .to(headerRef.current, 0.3, {
+            opacity: 1,
+          })
+          .to(quizContainerRef.current, 0.3, {
+            display: "block",
+            opacity: 1,
+          });
+      }, 100);
+    } catch (error) {}
   };
 
   return (
@@ -105,7 +118,7 @@ const Body = () => {
 
         <div className={styles.heroImg} ref={imgRef}>
           <Image
-            priority={true}
+            priority={"low"}
             src={"/hero-img.svg"}
             layout="fill"
             alt="hero image"
@@ -142,6 +155,38 @@ const Body = () => {
             <Image src={"/arrow.svg"} width={15} height={15} alt="submit" />
           </button>
         </form>
+      </section>
+
+      <section className={styles.quizContainer} ref={quizContainerRef}>
+        <div className={styles.displayQuestionNumber}>
+          <h2>Question 1 / 20</h2>
+        </div>
+        <div className={styles.quizWrapper}>
+          <h4>Candidate: {candidateName}</h4>
+
+          <div className={styles.quizHolder}>
+            <div className={styles.quiz}>
+              <div className={styles.questionWrapper}>
+                <p className={styles.number}>1</p>
+                <p className={styles.question}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
+                  quibusdam mollitia cupiditate blanditiis?
+                </p>
+              </div>
+              <div className={styles.answerWrapper}>
+                <div className={styles.answer}>
+                  <div className={styles.circle}></div>
+                  <p>Answer</p>
+                </div>
+                <div className={styles.answer}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
     </>
   );

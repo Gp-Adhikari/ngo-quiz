@@ -98,3 +98,77 @@
     }
   }
 }
+
+.quizContainer {
+  display: none;
+  position: relative;
+  z-index: 5;
+  opacity: 0;
+  color: #fff;
+
+  .displayQuestionNumber {
+    text-align: center;
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 0.8rem;
+    border-bottom: 10px solid $main;
+    background-color: $light-dark;
+    font-weight: normal;
+  }
+
+  .quizWrapper {
+    max-width: 500px;
+    width: 100%;
+    margin: 2rem auto;
+    h4 {
+      font-weight: normal;
+      word-wrap: break-word;
+      text-transform: capitalize;
+      margin: auto;
+    }
+
+    .quiz {
+      margin-top: 2rem;
+    }
+
+    .questionWrapper {
+      display: flex;
+      align-items: center;
+
+      .number {
+        margin-right: 1rem;
+        width: fit-content;
+        height: fit-content;
+        padding: 1rem;
+        background-color: $light-dark;
+        border-radius: 50rem;
+      }
+    }
+
+    .answerWrapper {
+      margin-top: 2rem;
+      .answer {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: $bg-color;
+        color: rgba(#000, 0.8);
+        border-radius: 0.3rem;
+
+        p {
+          max-width: 420px;
+          word-wrap: break-word;
+        }
+
+        .circle {
+          margin-right: 1rem;
+          height: 15px;
+          width: 15px;
+          border: 1px solid black;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}

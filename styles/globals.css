@@ -13,10 +13,12 @@
 
 ::-moz-selection {
   background: #f37168;
+  color: #000;
 }
 
 ::selection {
   background: #f37168;
+  color: #000;
 }
 
 /* width */
