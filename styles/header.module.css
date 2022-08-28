@@ -24,12 +24,20 @@
   border-radius: 550px;
   font-size: 14px;
   overflow: hidden;
+  height: 35px;
 }
 .language p {
   padding: 0.5rem 0.8rem;
   cursor: pointer;
   font-weight: bold;
 }
-.language p:first-child {
+.language p:nth-child(1) {
   background-color: #f37168;
+}
+
+@media screen and (max-width: 1250px) {
+  .header {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
 }

@@ -3,6 +3,7 @@
 .mainSection {
   display: flex;
   margin-top: 2rem;
+  overflow: hidden;
 }
 
 .error {
@@ -35,9 +36,12 @@
 .heroImg {
   position: absolute;
   bottom: 0;
+  max-width: 994px;
+  width: 100%;
+  height: 488px;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+
   z-index: 1;
   user-select: none;
   pointer-events: none;
@@ -119,7 +123,7 @@
   .quizWrapper {
     max-width: 500px;
     width: 100%;
-    margin: 2rem auto;
+    margin: 2rem auto 0 auto;
     h4 {
       font-weight: normal;
       word-wrap: break-word;
@@ -128,11 +132,11 @@
     }
 
     .quiz {
-      margin-top: 2rem;
+      margin: 2rem 0;
       transition: 0.3s ease;
     }
     .quizHolder {
-      height: calc(100vh - 310px);
+      height: calc(100vh - 242px);
       overflow-y: auto;
       scroll-behavior: smooth;
       scrollbar-width: none;
@@ -173,16 +177,87 @@
         p {
           max-width: 420px;
           word-wrap: break-word;
+          pointer-events: none;
         }
 
         .circle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           margin-right: 1rem;
           height: 15px;
           width: 15px;
           border: 1px solid black;
+          pointer-events: none;
           border-radius: 50%;
+        }
+
+        .innerCircle {
+          opacity: 0;
+          height: 7px;
+          width: 7px;
+          border-radius: 50%;
+          background-color: #000;
+          transition: 0.2s ease;
+        }
+
+        &:hover .innerCircle {
+          opacity: 1;
+        }
+
+        &:hover {
+          color: rgba(#000, 1);
         }
       }
     }
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .quizContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .heroImg {
+    width: 810px;
+    height: 400px;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .line {
+    &:before {
+      display: none;
+    }
+  }
+  .heroImg {
+    width: 710px;
+    height: 350px;
+  }
+}
+@media screen and (max-width: 730px) {
+  .heroImg {
+    width: 600px;
+    height: 300px;
+  }
+}
+@media screen and (max-width: 640px) {
+  .heroImg {
+    width: 500px;
+    height: 250px;
+  }
+}
+@media screen and (max-width: 520px) {
+  .heroImg {
+    width: 400px;
+    height: 200px;
+  }
+}
+@media screen and (max-width: 420px) {
+  .heroImg {
+    display: none;
   }
 }

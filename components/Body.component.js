@@ -5,6 +5,8 @@ import Image from "next/image";
 import { AnimationContext } from "../context/Animation.context";
 import { DataContext } from "../context/Data.context";
 
+import { data } from "../data/questions";
+
 import gsap, { Power2 } from "gsap";
 
 const Body = () => {
@@ -43,56 +45,56 @@ const Body = () => {
 
   // focus question
   useEffect(() => {
-    if (quizHolderRef === null) return;
-    if (answersRef === null) return;
+    try {
+      if (quizHolderRef === null) return;
+      if (answersRef === null) return;
 
-    const allQuestions = quizHolderRef.current.children;
+      const allQuestions = quizHolderRef.current.children;
 
-    for (let i = 0; i < allQuestions.length; i++) {
-      if (i !== currentQuestion) {
-        allQuestions[i].style = `
+      for (let i = 0; i < allQuestions.length; i++) {
+        if (i !== currentQuestion) {
+          allQuestions[i].style = `
           pointer-events: none;
           opacity: 0.4;
-        `;
-      } else {
-        quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 250;
+          `;
+        } else {
+          quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 170;
 
-        allQuestions[i].style = `
+          allQuestions[i].style = `
           pointer-events: all;
           opacity: 1;
-        `;
-        allQuestions[i].focus();
+          `;
+          allQuestions[i].focus();
+        }
       }
-    }
-
-    // console.log(quizHolderRef.current.children[0].children[1]);
+    } catch (error) {}
   }, [quizHolderRef, answersRef, currentQuestion]);
 
   //set height and width for the hero image
-  useEffect(() => {
-    try {
-      if (width === undefined) return;
-      if (height === undefined) return;
-      if (imgRef === null) return;
+  // useEffect(() => {
+  //   try {
+  //     if (width === undefined) return;
+  //     if (height === undefined) return;
+  //     if (imgRef === null) return;
 
-      const img = imgRef.current;
+  //     const img = imgRef.current;
 
-      if (height > 995) {
-        img.style.width = `995px`;
-        img.style.height = `488px`;
-        return;
-      }
+  //     if (height > 995) {
+  //       img.style.width = `995px`;
+  //       img.style.height = `488px`;
+  //       return;
+  //     }
 
-      img.style.width = `${height}px`;
-      img.style.height = `${height / 2}px`;
-    } catch (error) {}
-  }, [height, width, imgRef]);
+  //     img.style.width = `${height}px`;
+  //     img.style.height = `${height / 2}px`;
+  //   } catch (error) {}
+  // }, [height, width, imgRef]);
 
   //on candidate's name submit
   const submitName = (e) => {
-    e.preventDefault();
     try {
-      setInitialAnimationHandler(true);
+      e.preventDefault();
+
       const tl = new gsap.timeline();
 
       if (candidateName === "") {
@@ -150,30 +152,33 @@ const Body = () => {
 
   //submit Answer
   const submitAnswer = (e) => {
-    const ans = e.target.children[1].innerText;
+    try {
+      const ans = e.target.children[1].innerText;
 
-    const answersOfTheQuestion =
-      quizHolderRef.current.children[currentQuestion].children[1].children;
+      const answersOfTheQuestion =
+        quizHolderRef.current.children[currentQuestion].children[1].children;
 
-    for (let i = 0; i < answersOfTheQuestion.length; i++) {
-      const answer = answersOfTheQuestion[i].children[1].innerText;
+      for (let i = 0; i < answersOfTheQuestion.length; i++) {
+        const answer = answersOfTheQuestion[i].children[1].innerText;
 
-      if (answer === ans) {
-        console.log(answersOfTheQuestion[i]);
-        answersOfTheQuestion[i].style.backgroundColor = "#00ff55";
+        if (answer === ans) {
+          answersOfTheQuestion[i].style.backgroundColor = "#00ff55";
+          console.log(answersOfTheQuestion[i].children[0].children[0]);
+          answersOfTheQuestion[i].children[0].children[0].style.opacity = "1";
 
-        setSelectedAnswers([
-          ...selectedAnswers,
-          {
-            questionNumber: currentQuestion,
-            selectedAnswer: i,
-            totalAnswers: answersOfTheQuestion[i].children.length,
-          },
-        ]);
+          setSelectedAnswers([
+            ...selectedAnswers,
+            {
+              questionNumber: currentQuestion + 1,
+              selectedAnswer: i + 1,
+              totalAnswers: answersOfTheQuestion.length,
+            },
+          ]);
 
-        setCurrentQuestion(currentQuestion + 1);
+          setCurrentQuestion(currentQuestion + 1);
+        }
       }
-    }
+    } catch (error) {}
   };
 
   return (
@@ -183,7 +188,7 @@ const Body = () => {
 
         <div className={styles.heroImg} ref={imgRef}>
           <Image
-            priority={"low"}
+            priority={true}
             src={"/hero-img.svg"}
             layout="fill"
             alt="hero image"
@@ -224,132 +229,40 @@ const Body = () => {
 
       <section className={styles.quizContainer} ref={quizContainerRef}>
         <div className={styles.displayQuestionNumber}>
-          <h2>Question 1 / 20</h2>
+          <h2>
+            Question {currentQuestion + 1} / {data.length}
+          </h2>
         </div>
         <div className={styles.quizWrapper}>
           <h4>Candidate: {candidateName}</h4>
 
           <div className={styles.quizHolder} ref={quizHolderRef}>
-            <div className={styles.quiz}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.number}>1</p>
-                <p className={styles.question}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
-                  quibusdam mollitia cupiditate blanditiis?
-                </p>
-              </div>
-              <div className={styles.answerWrapper} ref={answersRef}>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>Answer 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 1</p>
-                </div>
-              </div>
-            </div>
-            <div className={styles.quiz}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.number}>2</p>
-                <p className={styles.question}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
-                  quibusdam mollitia cupiditate blanditiis?
-                </p>
-              </div>
-              <div className={styles.answerWrapper} ref={answersRef}>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>Answer 2</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 2</p>
-                </div>
-              </div>
-            </div>
-            <div className={styles.quiz}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.number}>2</p>
-                <p className={styles.question}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
-                  quibusdam mollitia cupiditate blanditiis?
-                </p>
-              </div>
-              <div className={styles.answerWrapper} ref={answersRef}>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>Answer 2</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 2</p>
-                </div>
-              </div>
-            </div>
-            <div className={styles.quiz}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.number}>2</p>
-                <p className={styles.question}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
-                  quibusdam mollitia cupiditate blanditiis?
-                </p>
-              </div>
-              <div className={styles.answerWrapper} ref={answersRef}>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>Answer 2</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 2</p>
-                </div>
-              </div>
-            </div>
-            <div className={styles.quiz}>
-              <div className={styles.questionWrapper}>
-                <p className={styles.number}>2</p>
-                <p className={styles.question}>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
-                  quibusdam mollitia cupiditate blanditiis?
-                </p>
-              </div>
-              <div className={styles.answerWrapper} ref={answersRef}>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>Answer 2</p>
-                </div>
-                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
-                  <div className={styles.circle}></div>
-                  <p>नेपाली 2</p>
-                </div>
-              </div>
-            </div>
+            {data === []
+              ? "No Data"
+              : data.map((data, idx) => (
+                  <div className={styles.quiz} key={idx}>
+                    <div className={styles.questionWrapper}>
+                      <p className={styles.number}>{idx + 1}</p>
+                      <p className={styles.question}>{data.question}</p>
+                    </div>
+                    <div className={styles.answerWrapper} ref={answersRef}>
+                      {data.answers.length > 0
+                        ? data.answers.map((answer, idx) => (
+                            <div
+                              className={styles.answer}
+                              onClick={(e) => submitAnswer(e)}
+                              key={idx}
+                            >
+                              <div className={styles.circle}>
+                                <div className={styles.innerCircle}></div>
+                              </div>
+                              <p>{answer}</p>
+                            </div>
+                          ))
+                        : null}
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </section>

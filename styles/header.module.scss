@@ -23,14 +23,22 @@
   border-radius: 550px;
   font-size: 14px;
   overflow: hidden;
+  height: 35px;
 
   p {
     padding: 0.5rem 0.8rem;
     cursor: pointer;
     font-weight: bold;
 
-    &:first-child {
+    &:nth-child(1) {
       background-color: $main;
     }
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .header {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
