@@ -129,6 +129,18 @@
 
     .quiz {
       margin-top: 2rem;
+      transition: 0.3s ease;
+    }
+    .quizHolder {
+      height: calc(100vh - 310px);
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     .questionWrapper {
@@ -155,6 +167,8 @@
         background-color: $bg-color;
         color: rgba(#000, 0.8);
         border-radius: 0.3rem;
+        transition: 0.3s ease;
+        cursor: pointer;
 
         p {
           max-width: 420px;

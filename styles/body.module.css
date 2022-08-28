@@ -132,6 +132,17 @@
 }
 .quizContainer .quizWrapper .quiz {
   margin-top: 2rem;
+  transition: 0.3s ease;
+}
+.quizContainer .quizWrapper .quizHolder {
+  height: calc(100vh - 310px);
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.quizContainer .quizWrapper .quizHolder::-webkit-scrollbar {
+  display: none;
 }
 .quizContainer .quizWrapper .questionWrapper {
   display: flex;
@@ -160,6 +171,8 @@
   background-color: #f8f8f8;
   color: rgba(0, 0, 0, 0.8);
   border-radius: 0.3rem;
+  transition: 0.3s ease;
+  cursor: pointer;
 }
 .quizContainer .quizWrapper .answerWrapper .answer p {
   max-width: 420px;

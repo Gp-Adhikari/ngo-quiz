@@ -8,7 +8,12 @@ import { DataContext } from "../context/Data.context";
 import gsap, { Power2 } from "gsap";
 
 const Body = () => {
-  const { candidateName, setCandidateName } = useContext(DataContext);
+  const {
+    candidateName,
+    setCandidateName,
+    selectedAnswers,
+    setSelectedAnswers,
+  } = useContext(DataContext);
 
   const { initialAnimationHandler, setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
@@ -17,6 +22,10 @@ const Body = () => {
   const formRef = useRef(null);
   const lineRef = useRef(null);
   const quizContainerRef = useRef(null);
+
+  const quizHolderRef = useRef(null);
+  const answersRef = useRef(null);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const [width, setWidth] = useState(undefined);
   const [height, setHeight] = useState(undefined);
@@ -32,6 +41,34 @@ const Body = () => {
     } catch (error) {}
   }, []);
 
+  // focus question
+  useEffect(() => {
+    if (quizHolderRef === null) return;
+    if (answersRef === null) return;
+
+    const allQuestions = quizHolderRef.current.children;
+
+    for (let i = 0; i < allQuestions.length; i++) {
+      if (i !== currentQuestion) {
+        allQuestions[i].style = `
+          pointer-events: none;
+          opacity: 0.4;
+        `;
+      } else {
+        quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 250;
+
+        allQuestions[i].style = `
+          pointer-events: all;
+          opacity: 1;
+        `;
+        allQuestions[i].focus();
+      }
+    }
+
+    // console.log(quizHolderRef.current.children[0].children[1]);
+  }, [quizHolderRef, answersRef, currentQuestion]);
+
+  //set height and width for the hero image
   useEffect(() => {
     try {
       if (width === undefined) return;
@@ -111,6 +148,34 @@ const Body = () => {
     } catch (error) {}
   };
 
+  //submit Answer
+  const submitAnswer = (e) => {
+    const ans = e.target.children[1].innerText;
+
+    const answersOfTheQuestion =
+      quizHolderRef.current.children[currentQuestion].children[1].children;
+
+    for (let i = 0; i < answersOfTheQuestion.length; i++) {
+      const answer = answersOfTheQuestion[i].children[1].innerText;
+
+      if (answer === ans) {
+        console.log(answersOfTheQuestion[i]);
+        answersOfTheQuestion[i].style.backgroundColor = "#00ff55";
+
+        setSelectedAnswers([
+          ...selectedAnswers,
+          {
+            questionNumber: currentQuestion,
+            selectedAnswer: i,
+            totalAnswers: answersOfTheQuestion[i].children.length,
+          },
+        ]);
+
+        setCurrentQuestion(currentQuestion + 1);
+      }
+    }
+  };
+
   return (
     <>
       <section className={styles.mainSection}>
@@ -141,11 +206,11 @@ const Body = () => {
             />
             {error === "maxLimit" ? (
               <p className={styles.error}>
-                *Candidate's Name cannot be more than 100 characters.
+                *Candidate&apos;s Name cannot be more than 100 characters.
               </p>
             ) : error === "minLimit" ? (
               <p className={styles.error}>
-                *Candidate's Name cannot be less than 2 characters.
+                *Candidate&apos;s Name cannot be less than 2 characters.
               </p>
             ) : error === "empty" ? (
               <p className={styles.error}>*Field cannot be empty.</p>
@@ -164,7 +229,7 @@ const Body = () => {
         <div className={styles.quizWrapper}>
           <h4>Candidate: {candidateName}</h4>
 
-          <div className={styles.quizHolder}>
+          <div className={styles.quizHolder} ref={quizHolderRef}>
             <div className={styles.quiz}>
               <div className={styles.questionWrapper}>
                 <p className={styles.number}>1</p>
@@ -174,14 +239,114 @@ const Body = () => {
                   quibusdam mollitia cupiditate blanditiis?
                 </p>
               </div>
-              <div className={styles.answerWrapper}>
-                <div className={styles.answer}>
+              <div className={styles.answerWrapper} ref={answersRef}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
                   <div className={styles.circle}></div>
-                  <p>Answer</p>
+                  <p>Answer 1</p>
                 </div>
-                <div className={styles.answer}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
                   <div className={styles.circle}></div>
-                  <p>नेपाली</p>
+                  <p>नेपाली 1</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 1</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 1</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 1</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 1</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 1</p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.quiz}>
+              <div className={styles.questionWrapper}>
+                <p className={styles.number}>2</p>
+                <p className={styles.question}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
+                  quibusdam mollitia cupiditate blanditiis?
+                </p>
+              </div>
+              <div className={styles.answerWrapper} ref={answersRef}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>Answer 2</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 2</p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.quiz}>
+              <div className={styles.questionWrapper}>
+                <p className={styles.number}>2</p>
+                <p className={styles.question}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
+                  quibusdam mollitia cupiditate blanditiis?
+                </p>
+              </div>
+              <div className={styles.answerWrapper} ref={answersRef}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>Answer 2</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 2</p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.quiz}>
+              <div className={styles.questionWrapper}>
+                <p className={styles.number}>2</p>
+                <p className={styles.question}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
+                  quibusdam mollitia cupiditate blanditiis?
+                </p>
+              </div>
+              <div className={styles.answerWrapper} ref={answersRef}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>Answer 2</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 2</p>
+                </div>
+              </div>
+            </div>
+            <div className={styles.quiz}>
+              <div className={styles.questionWrapper}>
+                <p className={styles.number}>2</p>
+                <p className={styles.question}>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                  Voluptatibus, नेपाली? Numquam unde sequi tenetur minima nihil
+                  quibusdam mollitia cupiditate blanditiis?
+                </p>
+              </div>
+              <div className={styles.answerWrapper} ref={answersRef}>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>Answer 2</p>
+                </div>
+                <div className={styles.answer} onClick={(e) => submitAnswer(e)}>
+                  <div className={styles.circle}></div>
+                  <p>नेपाली 2</p>
                 </div>
               </div>
             </div>
