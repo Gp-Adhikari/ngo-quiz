@@ -1,5 +1,11 @@
 @import "./colors";
 
+.wrapper {
+  width: 100%;
+  height: calc(100vh - 82px);
+  overflow: hidden;
+}
+
 .mainSection {
   display: flex;
   margin-top: 2rem;
@@ -16,7 +22,7 @@
   position: absolute;
   top: auto;
   width: 2px;
-  height: calc(100vh - 98px);
+  height: calc(100vh - 114px);
   background-color: $dark;
   border-radius: 3px;
 
@@ -213,8 +219,71 @@
   }
 }
 
+.result {
+  display: none;
+  position: relative;
+  z-index: 5;
+  color: $light;
+
+  .displayQuestionNumber {
+    text-align: center;
+    width: 100%;
+    padding: 1.5rem;
+    border-radius: 0.8rem;
+    border-bottom: 10px solid $main;
+    background-color: $light-dark;
+    font-weight: normal;
+  }
+
+  .resultContainer {
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .candidate {
+    background-color: $light-dark;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;
+
+    h3 {
+      text-align: center;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid $dark;
+    }
+    .percentage {
+      text-align: center;
+    }
+    .percent {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    input {
+      width: 100%;
+      height: 100%;
+      font-size: 3rem;
+      padding: 2rem;
+      border: none;
+      color: #fff;
+      background-color: transparent;
+
+      &::placeholder {
+        color: rgba(#fff, 0.7);
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 1250px) {
   .quizContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .result {
     margin-left: 1rem;
     margin-right: 1rem;
   }

@@ -15,9 +15,11 @@ const Body = () => {
     setCandidateName,
     selectedAnswers,
     setSelectedAnswers,
+    percentage,
+    qualityText,
   } = useContext(DataContext);
 
-  const { initialAnimationHandler, setInitialAnimationHandler, headerRef } =
+  const { setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
 
   const imgRef = useRef(null);
@@ -29,19 +31,9 @@ const Body = () => {
   const answersRef = useRef(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
-  const [width, setWidth] = useState(undefined);
-  const [height, setHeight] = useState(undefined);
+  const resultRef = useRef(null);
 
   const [error, setError] = useState("");
-  //set height of screen
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        setWidth(window.innerWidth);
-        setHeight(window.innerHeight);
-      }
-    } catch (error) {}
-  }, []);
 
   // focus question
   useEffect(() => {
@@ -69,26 +61,6 @@ const Body = () => {
       }
     } catch (error) {}
   }, [quizHolderRef, answersRef, currentQuestion]);
-
-  //set height and width for the hero image
-  // useEffect(() => {
-  //   try {
-  //     if (width === undefined) return;
-  //     if (height === undefined) return;
-  //     if (imgRef === null) return;
-
-  //     const img = imgRef.current;
-
-  //     if (height > 995) {
-  //       img.style.width = `995px`;
-  //       img.style.height = `488px`;
-  //       return;
-  //     }
-
-  //     img.style.width = `${height}px`;
-  //     img.style.height = `${height / 2}px`;
-  //   } catch (error) {}
-  // }, [height, width, imgRef]);
 
   //on candidate's name submit
   const submitName = (e) => {
@@ -175,6 +147,33 @@ const Body = () => {
             },
           ]);
 
+          //if all answers are selected
+          if (data.length - 1 === selectedAnswers.length) {
+            const tl = new gsap.timeline();
+
+            tl.to(quizContainerRef.current, 0.5, {
+              transform: "scale(0.5)",
+              opacity: 0,
+              display: "none",
+              overflow: "hidden",
+            }).fromTo(
+              resultRef.current,
+              {
+                opacity: 0,
+                duration: 0.5,
+                transform: "scale(0.5)",
+                display: "block",
+              },
+              {
+                opacity: 1,
+                transform: "scale(1)",
+              },
+              "+=0.3"
+            );
+
+            return;
+          }
+
           setCurrentQuestion(currentQuestion + 1);
         }
       }
@@ -182,7 +181,7 @@ const Body = () => {
   };
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <section className={styles.mainSection}>
         <div className={styles.line} ref={lineRef}></div>
 
@@ -266,7 +265,25 @@ const Body = () => {
           </div>
         </div>
       </section>
-    </>
+      <div className={styles.result} ref={resultRef}>
+        <div className={styles.displayQuestionNumber}>
+          <h2>Result</h2>
+        </div>
+
+        <div className={styles.resultContainer}>
+          <div className={styles.candidate}>
+            <h3>{candidateName}</h3>
+            <div className={styles.percentage}>
+              <div className={styles.percent}>{percentage.toFixed(2)} %</div>
+              {qualityText}
+            </div>
+          </div>
+          <div className={styles.candidate}>
+            <input type={"text"} placeholder="+ Compare" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -1,3 +1,9 @@
+.wrapper {
+  width: 100%;
+  height: calc(100vh - 82px);
+  overflow: hidden;
+}
+
 .mainSection {
   display: flex;
   margin-top: 2rem;
@@ -14,7 +20,7 @@
   position: absolute;
   top: auto;
   width: 2px;
-  height: calc(100vh - 98px);
+  height: calc(100vh - 114px);
   background-color: #07070f;
   border-radius: 3px;
 }
@@ -208,8 +214,71 @@
   color: black;
 }
 
+.result {
+  display: none;
+  position: relative;
+  z-index: 5;
+  color: #fff;
+}
+.result .displayQuestionNumber {
+  text-align: center;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 0.8rem;
+  border-bottom: 10px solid #f37168;
+  background-color: #0e0e1e;
+  font-weight: normal;
+}
+.result .resultContainer {
+  margin: 2rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.result .candidate {
+  background-color: #0e0e1e;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.result .candidate h3 {
+  text-align: center;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #07070f;
+}
+.result .candidate .percentage {
+  text-align: center;
+}
+.result .candidate .percent {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.result .candidate input {
+  width: 100%;
+  height: 100%;
+  font-size: 3rem;
+  padding: 2rem;
+  border: none;
+  color: #fff;
+  background-color: transparent;
+}
+.result .candidate input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.result .candidate input:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.result .candidate input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 @media screen and (max-width: 1250px) {
   .quizContainer {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .result {
     margin-left: 1rem;
     margin-right: 1rem;
   }
