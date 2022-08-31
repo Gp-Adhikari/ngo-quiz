@@ -48,6 +48,12 @@
   border-bottom: 1px solid #f37168;
 }
 
+.error {
+  font-size: 0.9rem;
+  color: red;
+  margin-top: 0.5rem;
+}
+
 @media screen and (max-width: 500px) {
   .loginWrapper {
     padding: 0 1rem;
