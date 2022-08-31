@@ -274,7 +274,7 @@ const Body = () => {
           <div className={styles.candidate}>
             <h3>{candidateName}</h3>
             <div className={styles.percentage}>
-              <div className={styles.percent}>{percentage.toFixed(2)} %</div>
+              <div className={styles.percent}>{percentage.toFixed(2)}</div>
               {qualityText}
             </div>
           </div>

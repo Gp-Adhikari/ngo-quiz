@@ -312,6 +312,12 @@
     width: 600px;
     height: 300px;
   }
+
+  .result {
+    .resultContainer {
+      grid-template-columns: 1fr;
+    }
+  }
 }
 @media screen and (max-width: 640px) {
   .heroImg {
