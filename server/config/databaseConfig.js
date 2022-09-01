@@ -11,10 +11,18 @@ config = {
 const connection = mysql.createConnection(config); //added the line
 
 connection.connect((err) => {
-  if (err) {
-    return res.json({ status: false, message: "Server Down!" });
+  if (err !== null) {
+    console.log("Error on DB connection.");
+    return;
   }
+
   console.log("connected successfully to DB.");
+});
+
+const createTables = `CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, cookie VARCHAR(255));`;
+
+connection.query(createTables, (error, results, fields) => {
+  if (error) return;
 });
 
 module.exports = {

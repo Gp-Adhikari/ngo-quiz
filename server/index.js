@@ -20,23 +20,31 @@ app.prepare().then(() => {
   //use helmet
   server.use(helmet());
 
+  //use body parser
+  server.use(express.json());
+
   //access cookie easy
   server.use(cookieParser());
-
-  //csrf protection
-  server.use(csrf({ cookie: { httpOnly: true, secure: false } }));
 
   //compression
   server.use(compression());
 
+  //csrf protection
+  // server.use(csrf({ cookie: { httpOnly: true, secure: false } }));
+
   // get csrf token
-  server.get("/api/csrf", (req, res) => {
-    return res.status(200).json({ status: true, csrfToken: req.csrfToken() });
-  });
+  // server.get("/api/csrf", (req, res) => {
+  //   return res.status(200).json({ status: true, csrfToken: req.csrfToken() });
+  // });
 
   server.get("*", (req, res) => {
     return handle(req, res);
   });
+
+  //import login route
+  const adminLogin = require("./routes/loginRoute");
+
+  server.use(adminLogin);
 
   //if any syntax error occurs
   server.use(function (err, req, res, next) {
