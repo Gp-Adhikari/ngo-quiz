@@ -1,10 +1,14 @@
 .wrapper {
+  max-width: 1200px;
   width: 100%;
+  margin: auto;
   height: calc(100vh - 82px);
   overflow: hidden;
 }
 
 .mainSection {
+  max-width: 1200px;
+  margin: auto;
   display: flex;
   margin-top: 2rem;
   overflow: hidden;

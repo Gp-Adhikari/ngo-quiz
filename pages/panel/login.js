@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import AdminHead from "../../components/AdminHead";
+import AdminHead from "../../components/panel/AdminHead";
 
 import styles from "../../styles/panel.module.css";
 
