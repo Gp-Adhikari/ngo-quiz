@@ -66,8 +66,8 @@
 
 //sidenav
 .sideNav {
-  position: fixed;
-  max-width: 250px;
+  position: sticky;
+  max-width: 241px;
   width: 100%;
   top: 0;
   left: 0;
@@ -92,23 +92,303 @@
     transition: 0.2s ease;
     background-color: $dark;
 
-    .indicator {
-      position: absolute;
-      right: 0;
-      max-width: 50px;
-      max-height: 30px;
-      width: 100%;
-      height: 100%;
+    &.navItemActive {
       background-color: $bg-color;
-      clip-path: polygon(100% 0, 50% 50%, 100% 100%);
+      color: $dark;
     }
 
     &:hover {
-      background-color: $light-dark;
+      background-color: lighten($dark, 10%);
+
+      &.navItemActive {
+        background-color: $bg-color;
+        color: $dark;
+      }
     }
 
     p {
       margin-left: 1rem;
+    }
+  }
+}
+
+//hamburger
+.hamburgerContainer {
+  position: fixed;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  bottom: 1rem;
+  right: 1rem;
+  border-radius: 200px;
+  background-color: $light;
+  box-shadow: 0px 0px 20px 0 rgba($dark, 0.5),
+    0px 0px 19px 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+//panel
+.panelContainer {
+  display: flex;
+
+  .content {
+    width: 100%;
+    margin: 6rem 3rem;
+  }
+
+  .infoContainer {
+    display: flex;
+  }
+
+  .info {
+    width: 300px;
+    background-color: $light;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    padding: 2rem;
+    overflow: auto;
+    margin-right: 2rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .activeUsers {
+      display: flex;
+      align-items: center;
+    }
+
+    .active {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+
+      .borderActive {
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        border-radius: 2000px;
+        border: 2px solid #0de200;
+        animation: animateActive 1s ease-out infinite;
+      }
+
+      .innerActive {
+        width: 15px;
+        height: 15px;
+        border-radius: 2000px;
+        background-color: #0de200;
+      }
+    }
+
+    h3 {
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-left: 2rem;
+      text-align: center;
+      font-size: 3rem;
+    }
+  }
+
+  .changeDataContainer {
+    display: flex;
+    color: $light;
+    background-color: $dark;
+    width: 100%;
+    margin-top: 2rem;
+    padding: 2rem;
+
+    .inputContainer {
+      display: flex;
+      align-items: center;
+      p {
+        margin-right: 1rem;
+      }
+    }
+
+    .data {
+      max-width: 350px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-left: 5rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      > p {
+        width: 100%;
+        background-color: lighten($dark, 10%);
+        font-size: 1.5rem;
+        padding: 1rem;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        margin: 1rem 0;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        border: none;
+        font-size: 0.9rem;
+      }
+
+      button {
+        width: fit-content;
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        background-color: darken($main, 10%);
+        color: $light;
+        font-weight: bold;
+        transition: 0.2s ease;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken($main, 20%);
+        }
+      }
+      .demo {
+        width: 100%;
+        padding: 1rem;
+        margin: 1rem 0;
+        background-color: lighten($dark, 10%);
+
+        > p {
+          margin-top: 1rem;
+
+          &:first-child {
+            margin-top: 0;
+          }
+        }
+
+        .demoPart {
+          background-color: $bg-color;
+          padding: 2rem 1rem;
+          color: #000;
+          margin-top: 1rem;
+
+          h3 {
+            text-align: center;
+          }
+
+          input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            background: $light;
+            box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+
+            &::placeholder {
+              color: rgba($dark, 0.8);
+            }
+          }
+          button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            padding: 0.8rem 3rem;
+            border: none;
+            background-color: $main;
+            border-radius: 50px;
+            transition: 0.2s ease;
+            cursor: pointer;
+
+            &:hover {
+              transform: scale(0.9);
+              box-shadow: 0 0 20px 0 $main;
+            }
+          }
+        }
+      }
+      .hint {
+        color: #000;
+        background-color: $bg-color;
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        margin-top: 1rem;
+
+        p {
+          font-size: 25px;
+          font-weight: normal;
+          font-family: "Italianno", cursive;
+          word-break: break-all;
+        }
+      }
+    }
+  }
+}
+
+@keyframes animateActive {
+  0% {
+    opacity: 1;
+    padding: 0;
+  }
+
+  100% {
+    opacity: 0;
+    padding: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 1190px) {
+  .panelContainer {
+    .changeDataContainer {
+      display: block;
+
+      .data {
+        margin-left: 0rem;
+        margin-top: 2rem;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .info {
+      width: 200px;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-right: 2rem;
+
+      p {
+        margin-left: 1rem;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sideNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: 100vw;
+    width: 0;
+    z-index: 10;
+    opacity: 0;
+  }
+
+  .hamburgerContainer {
+    z-index: 11;
+    display: flex;
+  }
+
+  .panelContainer {
+    .content {
+      margin: 4rem 2rem;
     }
   }
 }
@@ -119,5 +399,43 @@
   }
   .loginContainer {
     padding: 2rem 1.5rem;
+  }
+
+  .panelContainer {
+    .changeDataContainer {
+      .inputContainer {
+        display: block;
+        margin-top: 1rem;
+      }
+    }
+    .infoContainer {
+      display: block;
+    }
+
+    .info {
+      margin-top: 2rem;
+      margin-right: 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .panelContainer {
+    .changeDataContainer {
+      padding: 2rem 1rem;
+    }
+
+    .content {
+      margin: 4rem 0rem;
+      margin-bottom: 0;
+    }
+
+    .infoContainer {
+      margin-left: 1rem;
+    }
   }
 }
