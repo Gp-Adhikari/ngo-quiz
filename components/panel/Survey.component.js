@@ -9,6 +9,7 @@ import gsap from "gsap";
 
 const Survey = () => {
   const removePopupRef = useRef(null);
+  const editPopupRef = useRef(null);
 
   const [questionInEnglish, setQuestionInEnglish] = useState("");
   const [questionInNepali, setQuestionInNepali] = useState("");
@@ -94,6 +95,53 @@ const Survey = () => {
     } catch (error) {}
   };
 
+  const editSurvey = (selected) => {
+    try {
+      document.body.style.overflow = "hidden";
+
+      gsap.fromTo(
+        editPopupRef.current,
+        {
+          duration: 0.3,
+          opacity: 0,
+          display: "none",
+
+          onComplete: () => {
+            gsap.set(editPopupRef.current, { clearProps: "all" });
+          },
+        },
+        {
+          duration: 0.3,
+          opacity: 1,
+          display: "flex",
+        }
+      );
+    } catch (error) {}
+  };
+
+  const closeEditSurvey = () => {
+    try {
+      document.body.removeAttribute("style");
+
+      gsap.fromTo(
+        editPopupRef.current,
+        {
+          duration: 0.3,
+          opacity: 1,
+          display: "flex",
+        },
+        {
+          duration: 0.3,
+          opacity: 0,
+          display: "none",
+
+          onComplete: () => {
+            gsap.set(editPopupRef.current, { clearProps: "all" });
+          },
+        }
+      );
+    } catch (error) {}
+  };
   const closeRemoveSurvey = () => {
     try {
       if (selectedSurvey === undefined) return;
@@ -268,7 +316,10 @@ const Survey = () => {
                   </td>
                   <td>
                     <div className={styles.actionButton}>
-                      <div className={styles.edit}>
+                      <div
+                        className={styles.edit}
+                        onClick={() => editSurvey(data)}
+                      >
                         <Image
                           src={"/edit.svg"}
                           alt="edit"
@@ -296,6 +347,40 @@ const Survey = () => {
             )}
           </tbody>
         </table>
+
+        <div className={styles.removePopup} ref={editPopupRef}>
+          <div className={styles.hide} onClick={(e) => closeEditSurvey()}></div>
+          <div className={styles.popup}>
+            <div className={styles.popupHeader}>
+              <h3>Edit</h3>
+              <Image
+                src={"/close.svg"}
+                width={20}
+                height={20}
+                layout="fixed"
+                alt="close"
+                className={styles.img}
+                onClick={(e) => closeEditSurvey()}
+              />
+            </div>
+
+            <div className={styles.popupContent}>
+              <div className={styles.inputs}>
+                <p>Question</p>
+                <textarea></textarea>
+              </div>
+              <div className={styles.inputs}>
+                <p>Answers</p>
+                <textarea></textarea>
+                <textarea></textarea>
+                <textarea></textarea>
+              </div>
+              <div className={styles.buttons}>
+                <button>Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div className={styles.removePopup} ref={removePopupRef}>
           <div
