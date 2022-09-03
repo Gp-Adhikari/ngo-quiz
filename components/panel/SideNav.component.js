@@ -6,7 +6,7 @@ import DashboardIcon from "../../public/DashboardIcon";
 import CandidatesIcon from "../../public/CandidatesIcon";
 import SurveyIcon from "../../public/SurveyIcon";
 
-const SideNav = forwardRef((props, ref) => {
+const SideNav = (props, ref) => {
   return (
     <>
       <div className={styles.sideNav} ref={ref}>
@@ -20,6 +20,7 @@ const SideNav = forwardRef((props, ref) => {
             }
             onClick={() => {
               props.setCurrentPage("dashboard");
+              window.scrollTo(0, 0);
               props.handleMenu();
             }}
           >
@@ -36,6 +37,7 @@ const SideNav = forwardRef((props, ref) => {
             }
             onClick={() => {
               props.setCurrentPage("survey");
+              window.scrollTo(0, 0);
               props.handleMenu();
             }}
           >
@@ -52,6 +54,7 @@ const SideNav = forwardRef((props, ref) => {
             }
             onClick={() => {
               props.setCurrentPage("candidates");
+              window.scrollTo(0, 0);
               props.handleMenu();
             }}
           >
@@ -64,6 +67,6 @@ const SideNav = forwardRef((props, ref) => {
       </div>
     </>
   );
-});
+};
 
-export default SideNav;
+export default forwardRef(SideNav);

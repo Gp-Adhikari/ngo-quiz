@@ -1,19 +1,21 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Eye from "../../public/eye";
 import styles from "../../styles/panel.module.css";
 
-const Dashboard = () => {
-  const [url, setUrl] = useState("");
+import AdminHead from "./AdminHead";
 
-  useEffect(() => {
-    if (window !== undefined) {
-      setUrl(window.location.origin);
-    }
-  }, []);
+const Dashboard = () => {
+  const [titleInEnglish, setTitleInEnglish] = useState("");
+  const [titleInNepali, setTitleInNepali] = useState("");
+
+  const [presentationTextInEnglish, setPresentationTextInEnglish] =
+    useState("");
+  const [presentationTextInNepali, setPresentationTextInNepali] = useState("");
 
   return (
     <>
+      <AdminHead title="Dashboard" />
       <div className={styles.infoContainer}>
         <div className={styles.info}>
           <h3>Active Users</h3>
@@ -40,22 +42,36 @@ const Dashboard = () => {
           <p>Title</p>
           <div className={styles.inputContainer}>
             <p>English</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={titleInEnglish}
+              onChange={(e) => setTitleInEnglish(e.target.value)}
+            />
           </div>
           <div className={styles.inputContainer}>
             <p>Nepali</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={titleInNepali}
+              onChange={(e) => setTitleInNepali(e.target.value)}
+            />
           </div>
 
           <button>Submit</button>
           <div className={styles.demo}>
             <p>English</p>
             <div className={styles.hint}>
-              <p>Choose Your Candidate</p>
+              <p>
+                {titleInEnglish === ""
+                  ? "Choose Your Candidate"
+                  : titleInEnglish}
+              </p>
             </div>
             <p>Nepali</p>
             <div className={styles.hint}>
-              <p>Choose Your Candidate</p>
+              <p>
+                {titleInNepali === "" ? "उम्मेदवार छान्नुहोस्" : titleInNepali}
+              </p>
             </div>
           </div>
         </div>
@@ -63,18 +79,30 @@ const Dashboard = () => {
           <p>Presentation Text</p>
           <div className={styles.inputContainer}>
             <p>English</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={presentationTextInEnglish}
+              onChange={(e) => setPresentationTextInEnglish(e.target.value)}
+            />
           </div>
           <div className={styles.inputContainer}>
             <p>Nepali</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={presentationTextInNepali}
+              onChange={(e) => setPresentationTextInNepali(e.target.value)}
+            />
           </div>
           <button>Submit</button>
 
           <div className={styles.demo}>
             <p>English</p>
             <div className={styles.demoPart}>
-              <h3>Know More About Your Candidate</h3>
+              <h3>
+                {presentationTextInEnglish === ""
+                  ? "Know More About Your Candidate"
+                  : presentationTextInEnglish}
+              </h3>
               <input type="text" placeholder="Candidate's Name" />
               <button>
                 <Image
@@ -88,8 +116,12 @@ const Dashboard = () => {
             </div>
             <p>Nepali</p>
             <div className={styles.demoPart}>
-              <h3>Know More About Your Candidate</h3>
-              <input type="text" placeholder="Candidate's Name" />
+              <h3>
+                {presentationTextInNepali === ""
+                  ? "मैले मत दिन चाहेको उम्मेदवार कस्तो होला?"
+                  : presentationTextInNepali}
+              </h3>
+              <input type="text" placeholder="उम्मेदवारको नाम" />
               <button>
                 <Image
                   src={"/arrow.svg"}

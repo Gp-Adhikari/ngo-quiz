@@ -1,5 +1,3 @@
-import AdminHead from "../../components/panel/AdminHead";
-
 import styles from "../../styles/panel.module.css";
 import Dashboard from "../../components/panel/Dashboard.component";
 import Survey from "../../components/panel/Survey.component";
@@ -54,9 +52,8 @@ const Panel = () => {
 
   return (
     <>
-      <AdminHead title="Dashboard" />
-
       <div className={styles.panelContainer}>
+        <div className={styles.mobHeading}>{currentPage}</div>
         <div className={styles.hamburgerContainer} onClick={() => handleMenu()}>
           <Menu ref={menuRef} />
         </div>

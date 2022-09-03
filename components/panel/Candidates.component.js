@@ -1,5 +1,12 @@
+import AdminHead from "./AdminHead";
+
 const Candidates = () => {
-  return <>Candidates</>;
+  return (
+    <>
+      <AdminHead title="Candidates" />
+      Candidates
+    </>
+  );
 };
 
 export default Candidates;
