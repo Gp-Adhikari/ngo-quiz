@@ -9,45 +9,66 @@ const csrf = require("csurf");
 
 const next = require("next");
 
+//for socket
+const http = require("http");
+const socketIO = require("socket.io");
+
 const PORT = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
+const nextApp = next({ dev });
+const handle = nextApp.getRequestHandler();
 
-app.prepare().then(() => {
-  const server = express();
+nextApp.prepare().then(() => {
+  const app = express();
+
+  const server = http.createServer(app);
+  const io = socketIO(server);
 
   //use helmet
-  server.use(helmet());
+  app.use(helmet());
 
   //use body parser
-  server.use(express.json());
+  app.use(express.json());
 
   //access cookie easy
-  server.use(cookieParser());
+  app.use(cookieParser());
 
   //compression
-  server.use(compression());
+  app.use(compression());
 
   //csrf protection
-  // server.use(csrf({ cookie: { httpOnly: true, secure: false } }));
+  // app.use(csrf({ cookie: { httpOnly: true, secure: false } }));
 
   // get csrf token
-  // server.get("/api/csrf", (req, res) => {
+  // app.get("/api/csrf", (req, res) => {
   //   return res.status(200).json({ status: true, csrfToken: req.csrfToken() });
   // });
 
-  server.get("*", (req, res) => {
+  app.get("*", (req, res) => {
     return handle(req, res);
   });
+
+  const connectUsers = io.of("/connect");
+  require("./sockets/adminSocket")(connectUsers);
+
+  const activeUsers = io.of("/activeUsers");
+  require("./sockets/activeUsersSocket")(activeUsers);
 
   //import login route
   const adminLogin = require("./routes/loginRoute");
 
-  server.use(adminLogin);
+  //rate limit for api
+  const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 minutes
+    max: 1000,
+    message: "Too many requests from this IP, please try again later.",
+  });
+
+  app.use("/", limiter);
+  app.use("/", adminLogin);
 
   //if any syntax error occurs
-  server.use(function (err, req, res, next) {
+  app.use((err, req, res, next) => {
     if (err.code === "EBADCSRFTOKEN") {
       // handle CSRF token errors here
       res.status(403);

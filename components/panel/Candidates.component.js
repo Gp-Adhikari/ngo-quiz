@@ -12,7 +12,7 @@ const Candidates = () => {
           <thead>
             <tr>
               <th>Rank</th>
-              <th>Candidate's Name</th>
+              <th>Candidate&apos;s Name</th>
               <th>Times Searched</th>
               <th>Average Score</th>
             </tr>

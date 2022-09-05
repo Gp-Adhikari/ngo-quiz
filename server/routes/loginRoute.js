@@ -81,6 +81,46 @@ router.post("/login", (req, res) => {
   }
 });
 
+router.post("/token", (req, res) => {
+  const cookieToken = escape(req.cookies.rt);
+
+  if (cookieToken === null || cookieToken === undefined || cookieToken === "") {
+    return res.json({ status: false, message: "Not Authorized!" });
+  }
+
+  const searchForRefreshToken = `SELECT * FROM admins WHERE cookie = ${cookieToken}`;
+
+  //search for refresh token
+  connection.query(searchForRefreshToken, (error, results) => {
+    if (error !== null) {
+      return res.json({ status: false, message: "Something went wrong!" });
+    }
+
+    const user = results[0];
+
+    if (user === undefined) {
+      return res.json({ status: false, message: "Not Authorized!" });
+    }
+
+    const userId = user.id;
+
+    //verify the refresh token
+    const verified = jwt.verify(user.cookie, process.env.REFRESH_TOKEN_SECRET);
+
+    if (!verified) {
+      return res.json({ status: false, message: "Not Authorized!" });
+    }
+
+    const accessToken = generateAccessToken({ id: userId });
+
+    return res.json({
+      status: true,
+      message: "Token Regenerated!",
+      token: accessToken,
+    });
+  });
+});
+
 router.delete("/logout", (req, res) => {
   try {
     const rt = escape(req.cookies.rt);

@@ -1,3 +1,5 @@
+import React, { useRef, useState, useContext, useEffect } from "react";
+
 import styles from "../../styles/panel.module.css";
 import Dashboard from "../../components/panel/Dashboard.component";
 import Survey from "../../components/panel/Survey.component";
@@ -5,17 +7,34 @@ import Candidates from "../../components/panel/Candidates.component";
 
 import SideNav from "../../components/panel/SideNav.component";
 
-import { useRef, useState } from "react";
-
 import gsap, { Power3 } from "gsap";
 import Menu from "../../public/Menu";
+import { TokenContext } from "../../context/Token.context";
+
+import { useRouter } from "next/router";
 
 const Panel = () => {
+  const router = useRouter();
+  const { token, setToken, loading, setLoading } = useContext(TokenContext);
+
   const [currentPage, setCurrentPage] = useState("dashboard");
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
   const menuRef = useRef(null);
+
+  //set loading to true as default
+  useEffect(() => {
+    setLoading(true);
+  }, [setLoading]);
+
+  useEffect(() => {
+    if (token === null) {
+      router.replace("/panel/login");
+    } else {
+      setLoading(false);
+    }
+  }, [token, setLoading, router]);
 
   const handleMenu = () => {
     try {

@@ -1,11 +1,14 @@
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
+import { TokenContext } from "../../context/Token.context";
 import Eye from "../../public/eye";
 import styles from "../../styles/panel.module.css";
 
 import AdminHead from "./AdminHead";
 
 const Dashboard = () => {
+  const { connections } = useContext(TokenContext);
+
   const [titleInEnglish, setTitleInEnglish] = useState("");
   const [titleInNepali, setTitleInNepali] = useState("");
 
@@ -24,7 +27,7 @@ const Dashboard = () => {
               <div className={styles.borderActive}></div>
               <div className={styles.innerActive}></div>
             </div>
-            <p>48</p>
+            <p>{connections}</p>
           </div>
         </div>
 

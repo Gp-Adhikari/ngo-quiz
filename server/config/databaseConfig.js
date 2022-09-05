@@ -19,10 +19,17 @@ connection.connect((err) => {
   console.log("connected successfully to DB.");
 });
 
-const createTables = `CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, cookie VARCHAR(255));`;
+const createAdminTable = `CREATE TABLE IF NOT EXISTS admins (id INTEGER PRIMARY KEY AUTO_INCREMENT, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, cookie VARCHAR(255));`;
+const createTitlesTable = `CREATE TABLE IF NOT EXISTS titles (id INTEGER PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255) NOT NULL, titleInEnglish VARCHAR(255) NOT NULL, titleInNepali VARCHAR(255) NOT NULL);`;
 
-connection.query(createTables, (error, results, fields) => {
+//createAdminTable
+connection.query(createAdminTable, (error, results, fields) => {
   if (error) return;
+});
+
+//createTitlesTable
+connection.query(createTitlesTable, (error, results, fields) => {
+  if (error) console.log(error);
 });
 
 module.exports = {

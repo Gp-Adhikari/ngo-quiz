@@ -1,17 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import AdminHead from "../../components/panel/AdminHead";
-
+import { TokenContext } from "../../context/Token.context";
 import styles from "../../styles/panel.module.css";
 
+import { useRouter } from "next/router";
+
 const Admin = () => {
+  const router = useRouter();
+
+  const { token, setToken, loading, setLoading } = useContext(TokenContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [checkUsername, setCheckUsername] = useState(false);
   const [checkPassword, setCheckPassword] = useState(false);
 
-  const handleLogin = (e) => {
+  const [error, setError] = useState(false);
+
+  //set loading to true as default
+  useEffect(() => {
+    setLoading(true);
+  }, [setLoading]);
+
+  useEffect(() => {
+    if (token === null || token === "") {
+      setLoading(false);
+    } else {
+      router.replace("/panel");
+    }
+  }, [token, router, setLoading]);
+
+  const handleLogin = async (e) => {
     try {
       e.preventDefault();
 
@@ -26,13 +47,38 @@ const Admin = () => {
         return;
       }
       setCheckPassword(false);
+
+      setLoading(true);
+
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === true) {
+        setToken(result.token);
+        setError(false);
+        router.replace("/panel");
+      }
+
+      if (result.status === false) {
+        setLoading(false);
+        setError(true);
+      }
     } catch (error) {}
   };
 
   return (
     <>
       <AdminHead title={"Login"} />
-
       <div className={styles.loginWrapper}>
         <div className={styles.loginContainer}>
           <h2>LOGIN</h2>
@@ -58,6 +104,8 @@ const Admin = () => {
               />
               {checkPassword === true ? (
                 <p className={styles.error}>*Invalid Password.</p>
+              ) : error === true ? (
+                <p className={styles.error}>*Invalid Username or Password.</p>
               ) : null}
             </div>
 
