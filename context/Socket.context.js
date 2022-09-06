@@ -5,8 +5,15 @@ import { TokenContext } from "./Token.context";
 export const SocketContext = createContext(null);
 
 const SocketContextProvider = ({ children }) => {
-  const { token, adminSocket, activeUsersSocket, setConnections } =
-    useContext(TokenContext);
+  const {
+    token,
+    adminSocket,
+    activeUsersSocket,
+    setConnections,
+    setVisits,
+    setTitle,
+    setPresentationText,
+  } = useContext(TokenContext);
 
   //handle active users socket
   useEffect(() => {
@@ -18,6 +25,18 @@ const SocketContextProvider = ({ children }) => {
             activeUsersSocket.on("connections", (msg) => {
               setConnections(msg);
             });
+
+            activeUsersSocket.on("visits", (msg) => {
+              setVisits(msg.totalVisits);
+            });
+
+            activeUsersSocket.on("title", (msg) => {
+              setTitle(msg);
+            });
+
+            activeUsersSocket.on("presentationText", (msg) => {
+              setPresentationText(msg);
+            });
           });
         } catch (error) {}
       }
@@ -27,10 +46,17 @@ const SocketContextProvider = ({ children }) => {
   //handle admin socket
   useEffect(() => {
     try {
-      if (adminSocket !== null && token !== null && token !== "") {
+      if (adminSocket !== null) {
         try {
           adminSocket.on("connect", () => {
             //get initial data
+            adminSocket.on("title", (msg) => {
+              setTitle(msg);
+            });
+
+            adminSocket.on("presentationText", (msg) => {
+              setPresentationText(msg);
+            });
           });
         } catch (error) {}
       }

@@ -1,6 +1,7 @@
 const Eye = () => {
   return (
     <svg
+      className="eye-svg"
       width="30"
       height="22"
       viewBox="0 0 30 22"

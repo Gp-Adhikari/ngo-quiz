@@ -8,6 +8,7 @@ import { DataContext } from "../context/Data.context";
 import { data } from "../data/questions";
 
 import gsap, { Power2 } from "gsap";
+import { TokenContext } from "../context/Token.context";
 
 const Body = () => {
   const {
@@ -18,6 +19,8 @@ const Body = () => {
     percentage,
     qualityText,
   } = useContext(DataContext);
+
+  const { language, presentationText } = useContext(TokenContext);
 
   const { setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
@@ -200,13 +203,23 @@ const Body = () => {
           onSubmit={(e) => submitName(e)}
           ref={formRef}
         >
-          <h1>Know More About Your Candidate</h1>
+          <h1>
+            {presentationText === null ? (
+              ""
+            ) : language === "en" ? (
+              <>{presentationText.presentationTextInEnglish}</>
+            ) : (
+              <>{presentationText.presentationTextInNepali}</>
+            )}
+          </h1>
           <div className={styles.inputWrapper}>
             <input
               type={"text"}
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
-              placeholder="Candidate's Name"
+              placeholder={
+                language === "en" ? "Candidate's Name" : "उम्मेदवारको नाम"
+              }
             />
             {error === "maxLimit" ? (
               <p className={styles.error}>

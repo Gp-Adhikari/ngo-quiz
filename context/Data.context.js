@@ -3,7 +3,7 @@ import React, { useState, createContext, useEffect } from "react";
 export const DataContext = createContext(null);
 
 const DataContextProvider = ({ children }) => {
-  const [candidateName, setCandidateName] = useState("Gp Adhikari");
+  const [candidateName, setCandidateName] = useState("");
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
   const [percentagePerQuestion, setPercentagePerQuestion] = useState([]);

@@ -10,6 +10,7 @@ import gsap from "gsap";
 const Survey = () => {
   const removePopupRef = useRef(null);
   const editPopupRef = useRef(null);
+  const answersRef = useRef(null);
 
   const [questionInEnglish, setQuestionInEnglish] = useState("");
   const [questionInNepali, setQuestionInNepali] = useState("");
@@ -19,8 +20,25 @@ const Survey = () => {
 
   const [englishAnswerInArray, setEnglishAnswerInArray] = useState([]);
   const [nepaliAnswerInArray, setNepaliAnswerInArray] = useState([]);
+  const [answers, setAnswers] = useState([]);
+
+  const [childrensInsideAnswers, setChildrensInsideAnswers] = useState(null);
 
   const [selectedSurvey, setSelectedSurvey] = useState(undefined);
+
+  // add answers to array
+  useEffect(() => {
+    const answers =
+      childrensInsideAnswers === null
+        ? answersRef.current.children
+        : childrensInsideAnswers;
+
+    console.log(answers);
+  }, [setAnswers, answersRef, childrensInsideAnswers]);
+
+  useEffect(() => {
+    console.log("2134", childrensInsideAnswers);
+  }, [childrensInsideAnswers]);
 
   // change answers to array
   useEffect(() => {
@@ -170,6 +188,46 @@ const Survey = () => {
     } catch (error) {}
   };
 
+  //add answers
+  const addAnswers = () => {
+    const answers = answersRef.current;
+
+    const parentElement = document.createElement("div");
+    parentElement.className = "actualAnswer";
+
+    const pTagElement = document.createElement("p");
+    pTagElement.innerText = `Answer ${answers.children.length + 1}:`;
+
+    const inputForEnglish = document.createElement("input");
+    inputForEnglish.type = "text";
+    inputForEnglish.placeholder = "English";
+
+    const inputForNepali = document.createElement("input");
+    inputForNepali.type = "text";
+    inputForNepali.placeholder = "Nepali";
+
+    const inputForPoints = document.createElement("input");
+    inputForPoints.type = "number";
+    inputForPoints.placeholder = "Points";
+
+    parentElement.appendChild(pTagElement);
+    parentElement.appendChild(inputForEnglish);
+    parentElement.appendChild(inputForNepali);
+    parentElement.appendChild(inputForPoints);
+
+    answers.appendChild(parentElement);
+    console.log(1, answers.children);
+    setChildrensInsideAnswers(answers.children);
+  };
+
+  const removeAnswer = () => {
+    const answers = answersRef.current;
+
+    //remove answer from bottom
+    answers.children[answers.children.length - 1].remove();
+    setChildrensInsideAnswers(answers.children);
+  };
+
   return (
     <>
       <AdminHead title="Survey" />
@@ -198,18 +256,35 @@ const Survey = () => {
 
             <h3>Answer</h3>
             <div className={styles.answer}>
-              <p>( Hint: Use \\ to write your next answer. )</p>
               <div>
-                <textarea
-                  placeholder="Answer 1. \\ Answer 2. \\ Answer 3."
-                  value={answerInEnglish}
-                  onChange={(e) => setAnswerInEnglish(e.target.value)}
-                ></textarea>
-                <textarea
-                  placeholder="उत्तर १। \\ उत्तर २। \\ उत्तर ३।"
-                  value={answerInNepali}
-                  onChange={(e) => setAnswerInNepali(e.target.value)}
-                ></textarea>
+                <div ref={answersRef}>
+                  <div className={"actualAnswer"}>
+                    <p>Answer 1:</p>
+                    <input type="text" placeholder="English" />
+                    <input type="text" placeholder="Nepali" />
+                    <input type="number" placeholder="Points" />
+                  </div>
+                </div>
+                <div className={styles.buttonWrapperForAnswer}>
+                  <div
+                    className={styles.addAnswers}
+                    onClick={() => addAnswers()}
+                  >
+                    <span>+</span>
+                  </div>
+                  <div
+                    className={styles.removeAnswers}
+                    onClick={() => removeAnswer()}
+                  >
+                    <Image
+                      src={"/remove.svg"}
+                      alt="remove"
+                      width={24}
+                      height={24}
+                      layout="fixed"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 

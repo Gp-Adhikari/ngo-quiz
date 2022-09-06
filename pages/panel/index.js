@@ -17,7 +17,7 @@ const Panel = () => {
   const router = useRouter();
   const { token, setToken, loading, setLoading } = useContext(TokenContext);
 
-  const [currentPage, setCurrentPage] = useState("dashboard");
+  const [currentPage, setCurrentPage] = useState("survey");
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);

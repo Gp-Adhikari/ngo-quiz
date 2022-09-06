@@ -8,8 +8,6 @@ const adminPermission = require("../utils/adminPermission");
 const connection = config.connection;
 
 module.exports = (connectUsers) => {
-  let connectedUsers = 0;
-
   connectUsers.use((socket, next) => {
     //verify the token
     const authHeader = socket.handshake.auth.token;
@@ -19,42 +17,44 @@ module.exports = (connectUsers) => {
     if (token === null) return;
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-      if (err) return next(new Error("Unauthorized"));
-      socket.user = user;
-      next();
+      if (err !== null) {
+        socket.user = null;
+        next();
+        // return next(new Error("Unauthorized"));
+      } else {
+        socket.user = user;
+        next();
+      }
     });
   });
 
   connectUsers.on("connection", async (socket) => {
-    connectedUsers++;
-    connectUsers.emit("connections", connectedUsers);
-
-    //check if admin exists
-    const adminId = escape(socket.user.id);
-
-    if (adminId !== "" && adminId !== undefined && adminId !== null) {
+    //if user === admin
+    if (socket.user !== null) {
       //check if admin exists
-      const searchForAdmin = `SELECT * FROM admins WHERE id = ${adminId}`;
-      connection.query(searchForAdmin, (err, results) => {
-        if (err !== null) {
-          return socket.emit("error", "Something went wrong!");
-        }
+      const adminId = escape(socket.user.id);
 
-        const user = results[0];
+      if (adminId !== "" && adminId !== undefined && adminId !== null) {
+        //check if admin exists
+        const searchForAdmin = `SELECT * FROM admins WHERE id = ${adminId}`;
+        connection.query(searchForAdmin, (err, results) => {
+          if (err !== null) {
+            return socket.emit("error", "Something went wrong!");
+          }
 
-        if (user === undefined) {
-          return socket.emit("error", "Admin not found!");
-        }
+          const user = results[0];
 
-        adminPermission(socket, user);
+          if (user === undefined) {
+            return socket.emit("error", "Admin not found!");
+          }
 
-        return socket.emit("data", user);
-      });
+          adminPermission(socket, user);
+
+          return socket.emit("data", user);
+        });
+      }
     }
 
-    socket.on("disconnect", () => {
-      connectedUsers--;
-      connectUsers.emit("connections", connectedUsers);
-    });
+    socket.on("disconnect", () => {});
   });
 };

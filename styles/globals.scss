@@ -46,6 +46,11 @@ body {
   background-color: $bg-color;
 }
 
+.eye-svg {
+  min-width: 30px;
+  min-height: 22px;
+}
+
 #eye {
   animation: blink 3.5s ease infinite;
 }
@@ -103,4 +108,31 @@ body {
 .ham3.active .bottom {
   stroke-dasharray: 110 205;
   stroke-dashoffset: -86px;
+}
+
+//add answers
+.actualAnswer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  background-color: lighten($dark, 10%);
+  padding: 1rem;
+  border-radius: 5px;
+
+  p {
+    font-weight: bold;
+  }
+
+  input {
+    margin-bottom: 0.5rem;
+    &:last-child {
+      margin-bottom: 0;
+      max-width: 100px;
+      align-self: center;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

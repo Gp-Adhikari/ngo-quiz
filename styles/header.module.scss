@@ -30,8 +30,10 @@
     padding: 0.5rem 0.8rem;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.5s ease;
+    background-color: $light;
 
-    &:nth-child(1) {
+    &.active {
       background-color: $main;
     }
   }

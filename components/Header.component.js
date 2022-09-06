@@ -1,9 +1,12 @@
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { AnimationContext } from "../context/Animation.context";
+import { TokenContext } from "../context/Token.context";
 import styles from "../styles/header.module.css";
 
 const Header = () => {
+  const { language, title, setLanguage } = useContext(TokenContext);
+
   const { initialAnimationHandler, headerRef } = useContext(AnimationContext);
 
   const [hideElements, setHideElements] = useState(false);
@@ -21,13 +24,26 @@ const Header = () => {
   return (
     <header className={styles.header} ref={headerRef}>
       <p className={styles.title}>
-        {" "}
         {hideElements ? (
           <span className={styles.title} style={{ opacity: 0 }}>
-            Choose Your Candidate
+            {title === null ? (
+              ""
+            ) : language === "en" ? (
+              <>{title.titleInEnglish}</>
+            ) : (
+              <>{title.titleInNepali}</>
+            )}
           </span>
         ) : (
-          "Choose Your Candidate"
+          <>
+            {title === null ? (
+              ""
+            ) : language === "en" ? (
+              <>{title.titleInEnglish}</>
+            ) : (
+              <>{title.titleInNepali}</>
+            )}
+          </>
         )}
       </p>
       <Image
@@ -37,8 +53,18 @@ const Header = () => {
         width={50}
       />
       <div className={styles.language}>
-        <p>en</p>
-        <p>नेपाली</p>
+        <p
+          onClick={() => setLanguage("en")}
+          className={language === "en" ? styles.active : null}
+        >
+          en
+        </p>
+        <p
+          onClick={() => setLanguage("np")}
+          className={language === "np" ? styles.active : null}
+        >
+          नेपाली
+        </p>
       </div>
     </header>
   );

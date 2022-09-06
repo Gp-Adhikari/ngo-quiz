@@ -13,12 +13,27 @@ const TokenContextProvider = ({ children }) => {
   const [adminSocket, setAdminSocket] = useState(null);
 
   const [connections, setConnections] = useState(0);
+  const [visits, setVisits] = useState(0);
+
+  const [title, setTitle] = useState(null);
+  const [presentationText, setPresentationText] = useState(null);
+
+  const [language, setLanguage] = useState("en");
 
   //connect to socket
   useEffect(() => {
     setActiveUsersSocket(
       io.connect("/activeUsers", {
         transports: ["websocket"],
+      })
+    );
+
+    setAdminSocket(
+      io.connect("/connect", {
+        transports: ["websocket"],
+        auth: {
+          token: `Bearer ${token}`,
+        },
       })
     );
   }, []);
@@ -58,12 +73,20 @@ const TokenContextProvider = ({ children }) => {
         setToken,
         loading,
         setLoading,
+        visits,
+        setVisits,
         adminSocket,
         connections,
         setConnections,
         setAdminSocket,
         activeUsersSocket,
         setActiveUsersSocket,
+        title,
+        setTitle,
+        language,
+        setLanguage,
+        presentationText,
+        setPresentationText,
       }}
     >
       <Loading loading={loading} />

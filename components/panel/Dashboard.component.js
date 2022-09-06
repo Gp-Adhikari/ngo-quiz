@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { TokenContext } from "../../context/Token.context";
 import Eye from "../../public/eye";
 import styles from "../../styles/panel.module.css";
@@ -7,14 +7,66 @@ import styles from "../../styles/panel.module.css";
 import AdminHead from "./AdminHead";
 
 const Dashboard = () => {
-  const { connections } = useContext(TokenContext);
+  const { connections, visits, adminSocket, title, presentationText } =
+    useContext(TokenContext);
 
   const [titleInEnglish, setTitleInEnglish] = useState("");
   const [titleInNepali, setTitleInNepali] = useState("");
 
+  const [titleError, setTitleError] = useState("");
+
   const [presentationTextInEnglish, setPresentationTextInEnglish] =
     useState("");
   const [presentationTextInNepali, setPresentationTextInNepali] = useState("");
+  const [presentationTextError, setPresentationTextError] = useState("");
+
+  const changePresentationText = (e) => {
+    e.preventDefault();
+
+    if (presentationTextInEnglish === "" && presentationTextInNepali === "") {
+      setPresentationTextError("empty");
+      return;
+    }
+
+    if (adminSocket !== null) {
+      adminSocket.emit("presentation-text", {
+        presentationTextInEnglish: presentationTextInEnglish,
+        presentationTextInNepali: presentationTextInNepali,
+      });
+
+      setPresentationTextError("changed");
+      setTimeout(() => {
+        setPresentationTextError("");
+      }, 3000);
+
+      setPresentationTextInEnglish("");
+      setPresentationTextInNepali("");
+    }
+  };
+
+  const changeTitle = (e) => {
+    e.preventDefault();
+
+    if (titleInEnglish === "" && titleInNepali === "") {
+      setTitleError("empty");
+      return;
+    }
+
+    if (adminSocket !== null) {
+      adminSocket.emit("change-title", {
+        titleInEnglish: titleInEnglish,
+        titleInNepali: titleInNepali,
+      });
+
+      setTitleError("changed");
+      setTimeout(() => {
+        setTitleError("");
+      }, 3000);
+
+      setTitleInEnglish("");
+      setTitleInNepali("");
+    }
+  };
 
   return (
     <>
@@ -27,7 +79,9 @@ const Dashboard = () => {
               <div className={styles.borderActive}></div>
               <div className={styles.innerActive}></div>
             </div>
-            <p>{connections}</p>
+            <p>
+              {connections.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            </p>
           </div>
         </div>
 
@@ -35,13 +89,13 @@ const Dashboard = () => {
           <h3>Total Visits</h3>
           <div className={styles.activeUsers}>
             <Eye />
-            <p>1000</p>
+            <p>{visits.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</p>
           </div>
         </div>
       </div>
 
       <div className={styles.changeDataContainer}>
-        <div className={styles.data}>
+        <form className={styles.data} onSubmit={(e) => changeTitle(e)}>
           <p>Title</p>
           <div className={styles.inputContainer}>
             <p>English</p>
@@ -60,25 +114,47 @@ const Dashboard = () => {
             />
           </div>
 
-          <button>Submit</button>
+          {titleError === "empty" ? (
+            <div>
+              <p className={`${styles.error} ${styles.marginBottom}`}>
+                Both Fields are Empty!
+              </p>
+            </div>
+          ) : titleError === "changed" ? (
+            <div>
+              <p className={`${styles.success} ${styles.marginBottom}`}>
+                Success!
+              </p>
+            </div>
+          ) : null}
+          <button onClick={(e) => changeTitle(e)}>Submit</button>
           <div className={styles.demo}>
             <p>English</p>
             <div className={styles.hint}>
               <p>
-                {titleInEnglish === ""
-                  ? "Choose Your Candidate"
-                  : titleInEnglish}
+                {titleInEnglish !== ""
+                  ? titleInEnglish
+                  : title !== null && title.titleInEnglish !== undefined
+                  ? title.titleInEnglish
+                  : null}
               </p>
             </div>
             <p>Nepali</p>
             <div className={styles.hint}>
               <p>
-                {titleInNepali === "" ? "उम्मेदवार छान्नुहोस्" : titleInNepali}
+                {titleInNepali !== ""
+                  ? titleInNepali
+                  : title !== null && title.titleInNepali !== undefined
+                  ? title.titleInNepali
+                  : null}
               </p>
             </div>
           </div>
-        </div>
-        <div className={styles.data}>
+        </form>
+        <form
+          className={styles.data}
+          onSubmit={(e) => changePresentationText(e)}
+        >
           <p>Presentation Text</p>
           <div className={styles.inputContainer}>
             <p>English</p>
@@ -96,15 +172,34 @@ const Dashboard = () => {
               onChange={(e) => setPresentationTextInNepali(e.target.value)}
             />
           </div>
-          <button>Submit</button>
+          {presentationTextError === "empty" ? (
+            <div>
+              <p className={`${styles.error} ${styles.marginBottom}`}>
+                Both Fields are Empty!
+              </p>
+            </div>
+          ) : presentationTextError === "changed" ? (
+            <div>
+              <p className={`${styles.success} ${styles.marginBottom}`}>
+                Success!
+              </p>
+            </div>
+          ) : null}
+          <button onClick={(e) => changePresentationText(e)}>Submit</button>
 
           <div className={styles.demo}>
             <p>English</p>
             <div className={styles.demoPart}>
               <h3>
-                {presentationTextInEnglish === ""
+                {/* {presentationTextInEnglish === ""
                   ? "Know More About Your Candidate"
-                  : presentationTextInEnglish}
+                  : presentationTextInEnglish} */}
+                {presentationTextInEnglish !== ""
+                  ? presentationTextInEnglish
+                  : presentationText !== null &&
+                    presentationText.presentationTextInEnglish !== undefined
+                  ? presentationText.presentationTextInEnglish
+                  : null}
               </h3>
               <input type="text" placeholder="Candidate's Name" />
               <button>
@@ -120,9 +215,15 @@ const Dashboard = () => {
             <p>Nepali</p>
             <div className={styles.demoPart}>
               <h3>
-                {presentationTextInNepali === ""
+                {/* {presentationTextInNepali === ""
                   ? "मैले मत दिन चाहेको उम्मेदवार कस्तो होला?"
-                  : presentationTextInNepali}
+                  : presentationTextInNepali} */}
+                {presentationTextInNepali !== ""
+                  ? presentationTextInNepali
+                  : presentationText !== null &&
+                    presentationText.presentationTextInNepali !== undefined
+                  ? presentationText.presentationTextInNepali
+                  : null}
               </h3>
               <input type="text" placeholder="उम्मेदवारको नाम" />
               <button>
@@ -136,7 +237,7 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );

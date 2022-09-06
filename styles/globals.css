@@ -48,6 +48,11 @@ body {
   background-color: #f8f8f8;
 }
 
+.eye-svg {
+  min-width: 30px;
+  min-height: 22px;
+}
+
 #eye {
   -webkit-animation: blink 3.5s ease infinite;
           animation: blink 3.5s ease infinite;
@@ -126,4 +131,27 @@ body {
 .ham3.active .bottom {
   stroke-dasharray: 110 205;
   stroke-dashoffset: -86px;
+}
+
+.actualAnswer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  background-color: #171732;
+  padding: 1rem;
+  border-radius: 5px;
+}
+.actualAnswer p {
+  font-weight: bold;
+}
+.actualAnswer input {
+  margin-bottom: 0.5rem;
+}
+.actualAnswer input:last-child {
+  margin-bottom: 0;
+  max-width: 100px;
+  align-self: center;
+}
+.actualAnswer:last-child {
+  margin-bottom: 0;
 }
