@@ -1,14 +1,15 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
-import React, { useEffect, useRef, useState } from "react";
-
-import { data } from "../../data/questions";
+import React, { useContext, useRef, useState } from "react";
 
 import Image from "next/image";
 import gsap from "gsap";
 import Answer from "./Answer.component";
+import { TokenContext } from "../../context/Token.context";
 
 const Survey = () => {
+  const { questions, adminSocket } = useContext(TokenContext);
+
   const removePopupRef = useRef(null);
   const editPopupRef = useRef(null);
   const answersRef = useRef(null);
@@ -16,65 +17,17 @@ const Survey = () => {
   const [questionInEnglish, setQuestionInEnglish] = useState("");
   const [questionInNepali, setQuestionInNepali] = useState("");
 
-  const [answerInEnglish, setAnswerInEnglish] = useState("");
-  const [answerInNepali, setAnswerInNepali] = useState("");
-
-  const [englishAnswerInArray, setEnglishAnswerInArray] = useState([]);
-  const [nepaliAnswerInArray, setNepaliAnswerInArray] = useState([]);
   const [answers, setAnswers] = useState([]);
 
   const [selectedSurvey, setSelectedSurvey] = useState(undefined);
+  const [removeSelectedSurvey, setRemoveSelectedSurvey] = useState(undefined);
 
-  // change answers to array
-  useEffect(() => {
-    try {
-      const splitAnswer = answerInEnglish.split("\\\\");
-
-      let answerInArray = [];
-      for (let i = 0; i < splitAnswer.length; i++) {
-        if (splitAnswer[i] === "") {
-          continue;
-        }
-
-        if (splitAnswer[i] === " ") {
-          continue;
-        }
-
-        const answer = splitAnswer[i].trim();
-
-        answerInArray.push(answer);
-      }
-
-      setEnglishAnswerInArray(answerInArray);
-    } catch (error) {}
-  }, [answerInEnglish]);
-
-  useEffect(() => {
-    try {
-      const splitAnswer = answerInNepali.split("\\\\");
-
-      let answerInArray = [];
-      for (let i = 0; i < splitAnswer.length; i++) {
-        if (splitAnswer[i] === "") {
-          continue;
-        }
-
-        if (splitAnswer[i] === " ") {
-          continue;
-        }
-
-        const answer = splitAnswer[i].trim();
-
-        answerInArray.push(answer);
-      }
-
-      setNepaliAnswerInArray(answerInArray);
-    } catch (error) {}
-  }, [answerInNepali]);
+  const [clicks, setClicks] = useState(0);
 
   const removeSurvey = (qno, id) => {
     try {
       setSelectedSurvey(qno);
+      setRemoveSelectedSurvey(id);
 
       document.body.style.overflow = "hidden";
 
@@ -145,12 +98,20 @@ const Survey = () => {
       );
     } catch (error) {}
   };
+
+  const handleRemoveSurvey = (removeSelectedSurvey) => {
+    console.log(removeSelectedSurvey);
+    if (adminSocket !== null) {
+      adminSocket.emit("remove-survey", {
+        id: removeSelectedSurvey,
+      });
+    }
+
+    setSelectedSurvey(undefined);
+  };
+
   const closeRemoveSurvey = () => {
     try {
-      if (selectedSurvey === undefined) return;
-
-      setSelectedSurvey(undefined);
-
       document.body.removeAttribute("style");
 
       gsap.fromTo(
@@ -173,73 +134,106 @@ const Survey = () => {
     } catch (error) {}
   };
 
-  const [clicks, setClicks] = useState(0);
-
   const display = () => {
-    let forms = [];
-    for (let i = 0; i < clicks; i++) {
-      forms.push(
-        <Answer
-          key={i}
-          detectAnswerChange={detectAnswerChange}
-          answers={answers}
-          answerNumber={i + 1}
-        />
-      );
-    }
-    return forms || null;
+    try {
+      let forms = [];
+      for (let i = 0; i < clicks; i++) {
+        forms.push(
+          <Answer
+            key={i}
+            detectAnswerChange={detectAnswerChange}
+            answers={answers}
+            answerNumber={i + 1}
+          />
+        );
+      }
+      return forms || null;
+    } catch (error) {}
   };
 
   //add answers
   const addAnswers = () => {
-    setClicks(clicks + 1);
+    try {
+      setClicks(clicks + 1);
 
-    const answersInElement = answersRef.current;
+      const answersInElement = answersRef.current;
 
-    setAnswers([
-      ...answers,
-      {
-        answerNumber: answersInElement.children.length + 1,
-        answerInEnglish: "",
-        answerInNepali: "",
-        points: "",
-      },
-    ]);
+      setAnswers([
+        ...answers,
+        {
+          answerNumber: answersInElement.children.length + 1,
+          answerInEnglish: "",
+          answerInNepali: "",
+          points: "",
+        },
+      ]);
+    } catch (error) {}
   };
 
   const detectAnswerChange = (e, answers) => {
-    const value = e.target.value;
-    const answerNumber = e.target.dataset.answernumber;
-    const field = e.target.dataset.textfield;
+    try {
+      const value = e.target.value;
+      const answerNumber = e.target.dataset.answernumber;
+      const field = e.target.dataset.textfield;
 
-    if (value !== undefined) {
-      const findQuestion = answers.findIndex((question) => {
-        return question.answerNumber == answerNumber;
-      });
+      if (value !== undefined) {
+        const findQuestion = answers.findIndex((question) => {
+          return question.answerNumber == answerNumber;
+        });
 
-      let allAnswers = answers;
+        let allAnswers = answers;
 
-      if (field.toString() === "english") {
-        allAnswers[findQuestion].answerInEnglish = value;
+        if (field.toString() === "english") {
+          allAnswers[findQuestion].answerInEnglish = value;
+        }
+        if (field.toString() === "nepali") {
+          allAnswers[findQuestion].answerInNepali = value;
+        }
+        if (field.toString() === "points") {
+          allAnswers[findQuestion].points = value;
+        }
+        setAnswers([...allAnswers]);
       }
-      if (field.toString() === "nepali") {
-        allAnswers[findQuestion].answerInNepali = value;
-      }
-      if (field.toString() === "points") {
-        allAnswers[findQuestion].points = value;
-      }
-      setAnswers([...allAnswers]);
-    }
+    } catch (error) {}
   };
 
   const removeAnswer = () => {
     try {
+      if (clicks <= 0) {
+        return;
+      }
       if (answers !== null || answers.length > 0) {
         setClicks(clicks - 1);
         const poppedAnswer = answers.slice(0, answers.length - 1);
 
         setAnswers(poppedAnswer);
         return;
+      }
+    } catch (error) {}
+  };
+
+  //addSurvey
+  const addSurvey = () => {
+    try {
+      if (questionInEnglish === "" && questionInNepali === "") {
+        return;
+      }
+
+      if (answers.length <= 0) {
+        return;
+      }
+
+      if (adminSocket !== null) {
+        adminSocket.emit("add-survey", {
+          questionInEnglish: questionInEnglish,
+          questionInNepali: questionInNepali,
+          answers: answers,
+        });
+
+        setQuestionInEnglish("");
+        setQuestionInNepali("");
+        setClicks(0);
+        setAnswers([]);
       }
     } catch (error) {}
   };
@@ -297,7 +291,7 @@ const Survey = () => {
               </div>
             </div>
 
-            <button>Submit</button>
+            <button onClick={(e) => addSurvey(e)}>Submit</button>
           </div>
 
           <div className={styles.demoContainer}>
@@ -355,7 +349,7 @@ const Survey = () => {
                         <div className={styles.circle}>
                           <div className={styles.innerCircle}></div>
                         </div>
-                        <p>Answer</p>
+                        <p>उत्तर</p>
                       </div>
                     ) : (
                       answers.map((answer, index) => (
@@ -365,7 +359,7 @@ const Survey = () => {
                           </div>
                           <p>
                             {answer.answerInNepali === ""
-                              ? "Answer"
+                              ? "उत्तर"
                               : answer.answerInNepali}
                           </p>
                         </div>
@@ -392,25 +386,45 @@ const Survey = () => {
             </tr>
           </thead>
           <tbody>
-            {data === undefined || data[0] === undefined ? (
-              <td colSpan={4}>No Data Available.</td>
+            {questions === null ? (
+              <tr>
+                <td colSpan={4}>No Data Available.</td>
+              </tr>
+            ) : questions[0] === undefined ? (
+              <tr>
+                <td colSpan={4}>Loading...</td>
+              </tr>
             ) : (
-              data.map((data, index) => (
+              questions.map((question, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{data.question}</td>
                   <td>
-                    {data.answers.map((answer, idx) => (
-                      <p key={idx}>
-                        {idx + 1}. {answer}
-                      </p>
-                    ))}
+                    <p className={styles.marginBottom}>
+                      {question.questionInEnglish}
+                    </p>
+                    <p>{question.questionInNepali}</p>
+                  </td>
+                  <td>
+                    {question.answers === undefined
+                      ? null
+                      : JSON.parse(question.answers)[0] === undefined
+                      ? null
+                      : JSON.parse(question.answers).map((answer, idx) => (
+                          <div className={styles.marginBottom} key={idx}>
+                            <p className={styles.marginBottom05}>
+                              {answer.answerNumber}. {answer.answerInEnglish}
+                            </p>
+                            <p>
+                              {answer.answerNumber}. {answer.answerInNepali}
+                            </p>
+                          </div>
+                        ))}
                   </td>
                   <td>
                     <div className={styles.actionButton}>
                       <div
                         className={styles.edit}
-                        onClick={() => editSurvey(data)}
+                        onClick={() => editSurvey(question)}
                       >
                         <Image
                           src={"/edit.svg"}
@@ -422,7 +436,7 @@ const Survey = () => {
                       </div>
                       <div
                         className={styles.remove}
-                        onClick={(e) => removeSurvey(index + 1, data.id)}
+                        onClick={(e) => removeSurvey(index + 1, question.id)}
                       >
                         <Image
                           src={"/remove.svg"}
@@ -500,8 +514,21 @@ const Survey = () => {
               </p>
 
               <div className={styles.buttons}>
-                <button>Remove</button>
-                <button onClick={() => closeRemoveSurvey()}>Cancel</button>
+                <button
+                  onClick={() => {
+                    handleRemoveSurvey(removeSelectedSurvey);
+                    closeRemoveSurvey();
+                  }}
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={() => {
+                    closeRemoveSurvey();
+                  }}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

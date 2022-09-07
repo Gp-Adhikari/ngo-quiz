@@ -18,6 +18,8 @@ const TokenContextProvider = ({ children }) => {
   const [title, setTitle] = useState(null);
   const [presentationText, setPresentationText] = useState(null);
 
+  const [questions, setQuestions] = useState([]);
+
   const [language, setLanguage] = useState("en");
 
   //connect to socket
@@ -87,6 +89,8 @@ const TokenContextProvider = ({ children }) => {
         setLanguage,
         presentationText,
         setPresentationText,
+        questions,
+        setQuestions,
       }}
     >
       <Loading loading={loading} />

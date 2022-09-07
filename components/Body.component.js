@@ -5,8 +5,6 @@ import Image from "next/image";
 import { AnimationContext } from "../context/Animation.context";
 import { DataContext } from "../context/Data.context";
 
-import { data } from "../data/questions";
-
 import gsap, { Power2 } from "gsap";
 import { TokenContext } from "../context/Token.context";
 
@@ -20,7 +18,7 @@ const Body = () => {
     qualityText,
   } = useContext(DataContext);
 
-  const { language, presentationText } = useContext(TokenContext);
+  const { language, presentationText, questions } = useContext(TokenContext);
 
   const { setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
@@ -126,7 +124,7 @@ const Body = () => {
   };
 
   //submit Answer
-  const submitAnswer = (e) => {
+  const submitAnswer = (e, actualAnswer, actualQuestion) => {
     try {
       const ans = e.target.children[1].innerText;
 
@@ -138,7 +136,6 @@ const Body = () => {
 
         if (answer === ans) {
           answersOfTheQuestion[i].style.backgroundColor = "#00ff55";
-          console.log(answersOfTheQuestion[i].children[0].children[0]);
           answersOfTheQuestion[i].children[0].children[0].style.opacity = "1";
 
           setSelectedAnswers([
@@ -147,11 +144,13 @@ const Body = () => {
               questionNumber: currentQuestion + 1,
               selectedAnswer: i + 1,
               totalAnswers: answersOfTheQuestion.length,
+              points:
+                actualAnswer.points === "" ? 0 : parseInt(actualAnswer.points),
             },
           ]);
 
           //if all answers are selected
-          if (data.length - 1 === selectedAnswers.length) {
+          if (questions.length - 1 === selectedAnswers.length) {
             const tl = new gsap.timeline();
 
             tl.to(quizContainerRef.current, 0.5, {
@@ -242,33 +241,47 @@ const Body = () => {
       <section className={styles.quizContainer} ref={quizContainerRef}>
         <div className={styles.displayQuestionNumber}>
           <h2>
-            Question {currentQuestion + 1} / {data.length}
+            Question {currentQuestion + 1} / {questions.length}
           </h2>
         </div>
         <div className={styles.quizWrapper}>
           <h4>Candidate: {candidateName}</h4>
 
           <div className={styles.quizHolder} ref={quizHolderRef}>
-            {data === []
+            {questions === null
               ? "No Data"
-              : data.map((data, idx) => (
+              : questions[0] === undefined
+              ? "Loading..."
+              : questions.map((data, idx) => (
                   <div className={styles.quiz} key={idx}>
                     <div className={styles.questionWrapper}>
                       <p className={styles.number}>{idx + 1}</p>
-                      <p className={styles.question}>{data.question}</p>
+                      <p className={styles.question}>
+                        {language === "en"
+                          ? data.questionInEnglish
+                          : data.questionInNepali}
+                      </p>
                     </div>
                     <div className={styles.answerWrapper} ref={answersRef}>
-                      {data.answers.length > 0
-                        ? data.answers.map((answer, idx) => (
+                      {questions === null
+                        ? "NoData"
+                        : questions[0] === undefined
+                        ? "Loading..."
+                        : JSON.parse(data.answers).length > 0
+                        ? JSON.parse(data.answers).map((answer, idx) => (
                             <div
                               className={styles.answer}
-                              onClick={(e) => submitAnswer(e)}
+                              onClick={(e) => submitAnswer(e, answer, data)}
                               key={idx}
                             >
                               <div className={styles.circle}>
                                 <div className={styles.innerCircle}></div>
                               </div>
-                              <p>{answer}</p>
+                              <p>
+                                {language === "en"
+                                  ? answer.answerInEnglish
+                                  : answer.answerInNepali}
+                              </p>
                             </div>
                           ))
                         : null}
@@ -287,7 +300,7 @@ const Body = () => {
           <div className={styles.candidate}>
             <h3>{candidateName}</h3>
             <div className={styles.percentage}>
-              <div className={styles.percent}>{percentage.toFixed(2)}</div>
+              <div className={styles.percent}>{percentage}</div>
               {qualityText}
             </div>
           </div>

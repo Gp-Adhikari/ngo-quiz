@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { TokenContext } from "../../context/Token.context";
 import Eye from "../../public/eye";
 import styles from "../../styles/panel.module.css";
@@ -191,9 +191,6 @@ const Dashboard = () => {
             <p>English</p>
             <div className={styles.demoPart}>
               <h3>
-                {/* {presentationTextInEnglish === ""
-                  ? "Know More About Your Candidate"
-                  : presentationTextInEnglish} */}
                 {presentationTextInEnglish !== ""
                   ? presentationTextInEnglish
                   : presentationText !== null &&
@@ -215,9 +212,6 @@ const Dashboard = () => {
             <p>Nepali</p>
             <div className={styles.demoPart}>
               <h3>
-                {/* {presentationTextInNepali === ""
-                  ? "मैले मत दिन चाहेको उम्मेदवार कस्तो होला?"
-                  : presentationTextInNepali} */}
                 {presentationTextInNepali !== ""
                   ? presentationTextInNepali
                   : presentationText !== null &&

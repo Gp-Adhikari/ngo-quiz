@@ -3,7 +3,7 @@ const { escape } = require("mysql");
 const config = require("../config/databaseConfig");
 const connection = config.connection;
 
-const adminPermission = (socket, user) => {
+const titlePermission = (socket, user) => {
   //on change title
   socket.on("change-title", async (message) => {
     try {
@@ -19,7 +19,7 @@ const adminPermission = (socket, user) => {
 
       connection.query(searchForVisits, (err, results) => {
         if (err !== null) {
-          socket.emit("error", "Something went wrong!");
+          return socket.emit("error", "Something went wrong!");
         }
 
         const result = results[0];
@@ -97,7 +97,7 @@ const adminPermission = (socket, user) => {
 
       connection.query(searchForVisits, (err, results) => {
         if (err !== null) {
-          socket.emit("error", "Something went wrong!");
+          return socket.emit("error", "Something went wrong!");
         }
 
         const result = results[0];
@@ -160,4 +160,4 @@ const adminPermission = (socket, user) => {
   });
 };
 
-module.exports = adminPermission;
+module.exports = titlePermission;

@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const { escape } = require("mysql");
 
 const config = require("../config/databaseConfig");
-const adminPermission = require("../utils/adminPermission");
+const surveyPermission = require("../utils/surveyPermission");
+const titlePermission = require("../utils/titlePermission");
 const connection = config.connection;
 
 module.exports = (connectUsers) => {
@@ -48,7 +49,8 @@ module.exports = (connectUsers) => {
             return socket.emit("error", "Admin not found!");
           }
 
-          adminPermission(socket, user);
+          titlePermission(socket, user);
+          surveyPermission(socket, user);
 
           return socket.emit("data", user);
         });

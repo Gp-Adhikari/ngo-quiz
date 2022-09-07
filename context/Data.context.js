@@ -15,23 +15,7 @@ const DataContextProvider = ({ children }) => {
     for (let i = 0; i < selectedAnswers.length; i++) {
       const answer = selectedAnswers[i];
 
-      const selectedAnswer = parseInt(answer.selectedAnswer);
-      const totalAnswers = parseInt(answer.totalAnswers);
-
-      if (totalAnswers === 2) {
-        if (selectedAnswer === totalAnswers) {
-          setPercentage(100);
-        } else {
-          setPercentage(0);
-        }
-      }
-
-      //if answers are more than 2
-      const minPercentage = selectedAnswer / totalAnswers;
-
-      const percentOfThisAnswer = minPercentage * 100;
-
-      setPercentagePerQuestion([...percentagePerQuestion, percentOfThisAnswer]);
+      setPercentagePerQuestion([...percentagePerQuestion, answer.points]);
     }
   }, [selectedAnswers, setPercentagePerQuestion]);
 
@@ -43,7 +27,7 @@ const DataContextProvider = ({ children }) => {
       const total =
         prevPercentage === undefined
           ? percentOfThisQuestion
-          : (prevPercentage + percentOfThisQuestion) / 2;
+          : prevPercentage + percentOfThisQuestion;
 
       if (total < 20) {
         setQualityText(<p style={{ color: "red" }}>Poor</p>);
@@ -53,8 +37,10 @@ const DataContextProvider = ({ children }) => {
         setQualityText(<p style={{ color: "green" }}>Good</p>);
       } else if (total < 80) {
         setQualityText(<p style={{ color: "lightgreen" }}>Very Good</p>);
-      } else if (total <= 100) {
+      } else if (total < 100) {
         setQualityText(<p style={{ color: "lightgreen" }}>Excellent</p>);
+      } else if (total > 100) {
+        setQualityText(<p style={{ color: "lightgreen" }}>Outstanding</p>);
       }
 
       setPercentage(total);

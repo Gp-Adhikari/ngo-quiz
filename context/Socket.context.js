@@ -13,6 +13,7 @@ const SocketContextProvider = ({ children }) => {
     setVisits,
     setTitle,
     setPresentationText,
+    setQuestions,
   } = useContext(TokenContext);
 
   //handle active users socket
@@ -37,6 +38,10 @@ const SocketContextProvider = ({ children }) => {
             activeUsersSocket.on("presentationText", (msg) => {
               setPresentationText(msg);
             });
+
+            activeUsersSocket.on("questions", (msg) => {
+              setQuestions(msg);
+            });
           });
         } catch (error) {}
       }
@@ -56,6 +61,10 @@ const SocketContextProvider = ({ children }) => {
 
             adminSocket.on("presentationText", (msg) => {
               setPresentationText(msg);
+            });
+
+            adminSocket.on("questions", (msg) => {
+              setQuestions(msg);
             });
           });
         } catch (error) {}

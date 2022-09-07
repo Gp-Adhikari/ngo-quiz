@@ -15,9 +15,9 @@ import { useRouter } from "next/router";
 
 const Panel = () => {
   const router = useRouter();
-  const { token, setToken, loading, setLoading } = useContext(TokenContext);
+  const { token, setLoading } = useContext(TokenContext);
 
-  const [currentPage, setCurrentPage] = useState("survey");
+  const [currentPage, setCurrentPage] = useState("dashboard");
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);

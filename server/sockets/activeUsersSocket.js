@@ -96,6 +96,17 @@ module.exports = (connectUsers) => {
       }
     );
 
+    //send all questions
+    const getAllQuestions = `SELECT * FROM questions`;
+
+    connection.query(getAllQuestions, (err, results) => {
+      if (err !== null) {
+        return socket.emit("error", "Something went wrong");
+      }
+
+      return socket.emit("questions", results);
+    });
+
     socket.on("disconnect", () => {
       connectedUsers--;
       connectUsers.emit("connections", connectedUsers);
