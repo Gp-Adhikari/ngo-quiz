@@ -1,11 +1,12 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { data } from "../../data/questions";
 
 import Image from "next/image";
 import gsap from "gsap";
+import Answer from "./Answer.component";
 
 const Survey = () => {
   const removePopupRef = useRef(null);
@@ -22,23 +23,7 @@ const Survey = () => {
   const [nepaliAnswerInArray, setNepaliAnswerInArray] = useState([]);
   const [answers, setAnswers] = useState([]);
 
-  const [childrensInsideAnswers, setChildrensInsideAnswers] = useState(null);
-
   const [selectedSurvey, setSelectedSurvey] = useState(undefined);
-
-  // add answers to array
-  useEffect(() => {
-    const answers =
-      childrensInsideAnswers === null
-        ? answersRef.current.children
-        : childrensInsideAnswers;
-
-    console.log(answers);
-  }, [setAnswers, answersRef, childrensInsideAnswers]);
-
-  useEffect(() => {
-    console.log("2134", childrensInsideAnswers);
-  }, [childrensInsideAnswers]);
 
   // change answers to array
   useEffect(() => {
@@ -188,44 +173,75 @@ const Survey = () => {
     } catch (error) {}
   };
 
+  const [clicks, setClicks] = useState(0);
+
+  const display = () => {
+    let forms = [];
+    for (let i = 0; i < clicks; i++) {
+      forms.push(
+        <Answer
+          key={i}
+          detectAnswerChange={detectAnswerChange}
+          answers={answers}
+          answerNumber={i + 1}
+        />
+      );
+    }
+    return forms || null;
+  };
+
   //add answers
   const addAnswers = () => {
-    const answers = answersRef.current;
+    setClicks(clicks + 1);
 
-    const parentElement = document.createElement("div");
-    parentElement.className = "actualAnswer";
+    const answersInElement = answersRef.current;
 
-    const pTagElement = document.createElement("p");
-    pTagElement.innerText = `Answer ${answers.children.length + 1}:`;
+    setAnswers([
+      ...answers,
+      {
+        answerNumber: answersInElement.children.length + 1,
+        answerInEnglish: "",
+        answerInNepali: "",
+        points: "",
+      },
+    ]);
+  };
 
-    const inputForEnglish = document.createElement("input");
-    inputForEnglish.type = "text";
-    inputForEnglish.placeholder = "English";
+  const detectAnswerChange = (e, answers) => {
+    const value = e.target.value;
+    const answerNumber = e.target.dataset.answernumber;
+    const field = e.target.dataset.textfield;
 
-    const inputForNepali = document.createElement("input");
-    inputForNepali.type = "text";
-    inputForNepali.placeholder = "Nepali";
+    if (value !== undefined) {
+      const findQuestion = answers.findIndex((question) => {
+        return question.answerNumber == answerNumber;
+      });
 
-    const inputForPoints = document.createElement("input");
-    inputForPoints.type = "number";
-    inputForPoints.placeholder = "Points";
+      let allAnswers = answers;
 
-    parentElement.appendChild(pTagElement);
-    parentElement.appendChild(inputForEnglish);
-    parentElement.appendChild(inputForNepali);
-    parentElement.appendChild(inputForPoints);
-
-    answers.appendChild(parentElement);
-    console.log(1, answers.children);
-    setChildrensInsideAnswers(answers.children);
+      if (field.toString() === "english") {
+        allAnswers[findQuestion].answerInEnglish = value;
+      }
+      if (field.toString() === "nepali") {
+        allAnswers[findQuestion].answerInNepali = value;
+      }
+      if (field.toString() === "points") {
+        allAnswers[findQuestion].points = value;
+      }
+      setAnswers([...allAnswers]);
+    }
   };
 
   const removeAnswer = () => {
-    const answers = answersRef.current;
+    try {
+      if (answers !== null || answers.length > 0) {
+        setClicks(clicks - 1);
+        const poppedAnswer = answers.slice(0, answers.length - 1);
 
-    //remove answer from bottom
-    answers.children[answers.children.length - 1].remove();
-    setChildrensInsideAnswers(answers.children);
+        setAnswers(poppedAnswer);
+        return;
+      }
+    } catch (error) {}
   };
 
   return (
@@ -257,14 +273,7 @@ const Survey = () => {
             <h3>Answer</h3>
             <div className={styles.answer}>
               <div>
-                <div ref={answersRef}>
-                  <div className={"actualAnswer"}>
-                    <p>Answer 1:</p>
-                    <input type="text" placeholder="English" />
-                    <input type="text" placeholder="Nepali" />
-                    <input type="number" placeholder="Points" />
-                  </div>
-                </div>
+                <div ref={answersRef}>{display()}</div>
                 <div className={styles.buttonWrapperForAnswer}>
                   <div
                     className={styles.addAnswers}
@@ -305,7 +314,7 @@ const Survey = () => {
                     </p>
                   </div>
                   <div className={styles.answerWrapper}>
-                    {englishAnswerInArray[0] === undefined ? (
+                    {answers[0] === undefined ? (
                       <div className={styles.answer}>
                         <div className={styles.circle}>
                           <div className={styles.innerCircle}></div>
@@ -313,12 +322,16 @@ const Survey = () => {
                         <p>Answer</p>
                       </div>
                     ) : (
-                      englishAnswerInArray.map((answer, index) => (
+                      answers.map((answer, index) => (
                         <div className={styles.answer} key={index}>
                           <div className={styles.circle}>
                             <div className={styles.innerCircle}></div>
                           </div>
-                          <p>{answer}</p>
+                          <p>
+                            {answer.answerInEnglish === ""
+                              ? "Answer"
+                              : answer.answerInEnglish}
+                          </p>
                         </div>
                       ))
                     )}
@@ -337,20 +350,24 @@ const Survey = () => {
                     </p>
                   </div>
                   <div className={styles.answerWrapper}>
-                    {nepaliAnswerInArray[0] === undefined ? (
+                    {answers[0] === undefined ? (
                       <div className={styles.answer}>
                         <div className={styles.circle}>
                           <div className={styles.innerCircle}></div>
                         </div>
-                        <p>उत्तर।</p>
+                        <p>Answer</p>
                       </div>
                     ) : (
-                      nepaliAnswerInArray.map((answer, index) => (
+                      answers.map((answer, index) => (
                         <div className={styles.answer} key={index}>
                           <div className={styles.circle}>
                             <div className={styles.innerCircle}></div>
                           </div>
-                          <p>{answer}</p>
+                          <p>
+                            {answer.answerInNepali === ""
+                              ? "Answer"
+                              : answer.answerInNepali}
+                          </p>
                         </div>
                       ))
                     )}
