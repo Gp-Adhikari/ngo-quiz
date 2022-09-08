@@ -30,27 +30,29 @@ const TokenContextProvider = ({ children }) => {
   const MINUTE_MS = 1000 * 60 * 8;
 
   useEffect(() => {
-    if (token !== "" || token !== undefined || token !== null) {
-      const interval = setInterval(() => {
-        fetch("/token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.status === true) {
-              setToken(data.token);
-            } else {
-              router.replace("/panel/login");
-            }
-          });
-      }, MINUTE_MS);
+    try {
+      if (token !== "" || token !== undefined || token !== null) {
+        const interval = setInterval(() => {
+          fetch("/token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status === true) {
+                setToken(data.token);
+              } else {
+                router.replace("/panel/login");
+              }
+            });
+        }, MINUTE_MS);
 
-      return () => clearInterval(interval);
-    }
+        return () => clearInterval(interval);
+      }
+    } catch (error) {}
   }, [token]);
 
   //connect to socket
@@ -60,15 +62,19 @@ const TokenContextProvider = ({ children }) => {
         transports: ["websocket"],
       })
     );
+  }, []);
 
-    setAdminSocket(
-      io.connect("/connect", {
-        transports: ["websocket"],
-        auth: {
-          token: `Bearer ${token}`,
-        },
-      })
-    );
+  useEffect(() => {
+    try {
+      setAdminSocket(
+        io.connect("/connect", {
+          transports: ["websocket"],
+          auth: {
+            token: `Bearer ${token}`,
+          },
+        })
+      );
+    } catch (error) {}
   }, [token]);
 
   //get token if refresh token exists in cookie

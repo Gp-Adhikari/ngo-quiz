@@ -61,24 +61,33 @@ const titlePermission = (socket) => {
           connection.query(
             `UPDATE titles SET titleInEnglish = ${titleInEnglish}, titleInNepali = ${titleInNepali} WHERE name = 'title';`
           );
+
+          return socket.emit("title", {
+            titleInEnglish: titleInEnglish.replace(/[']/g, ""),
+            titleInNepali: titleInNepali.replace(/[']/g, ""),
+          });
         }
         // update if title in English field exist
         else if (titleInEnglish.length > 2 && titleInNepali.length > !2) {
           connection.query(
             `UPDATE titles SET titleInEnglish = ${titleInEnglish} WHERE name = 'title';`
           );
+
+          return socket.emit("title", {
+            titleInEnglish: titleInEnglish.replace(/[']/g, ""),
+            titleInNepali: result.titleInNepali,
+          });
         }
         // update if title in Nepali field exist
         else if (titleInEnglish.length > !2 && titleInNepali.length > 2) {
           connection.query(
             `UPDATE titles SET titleInNepali = ${titleInNepali} WHERE name = 'title';`
           );
+          return socket.emit("title", {
+            titleInEnglish: result.titleInEnglish,
+            titleInNepali: titleInNepali.replace(/[']/g, ""),
+          });
         }
-
-        return socket.emit("title", {
-          titleInEnglish: titleInEnglish.replace(/[']/g, ""),
-          titleInNepali: titleInNepali.replace(/[']/g, ""),
-        });
       });
     } catch (error) {
       return socket.emit("error", "Something went wrong");
@@ -142,24 +151,34 @@ const titlePermission = (socket) => {
           connection.query(
             `UPDATE titles SET titleInEnglish = ${titleInEnglish}, titleInNepali = ${titleInNepali} WHERE name = 'presentationText';`
           );
+
+          return socket.emit("presentationText", {
+            presentationTextInEnglish: titleInEnglish.replace(/[']/g, ""),
+            presentationTextInNepali: titleInNepali.replace(/[']/g, ""),
+          });
         }
         // update if title in English field exist
         else if (titleInEnglish.length > 2 && titleInNepali.length > !2) {
           connection.query(
             `UPDATE titles SET titleInEnglish = ${titleInEnglish} WHERE name = 'presentationText';`
           );
+
+          return socket.emit("presentationText", {
+            presentationTextInEnglish: titleInEnglish.replace(/[']/g, ""),
+            presentationTextInNepali: result.titleInNepali,
+          });
         }
         // update if title in Nepali field exist
         else if (titleInEnglish.length > !2 && titleInNepali.length > 2) {
           connection.query(
             `UPDATE titles SET titleInNepali = ${titleInNepali} WHERE name = 'presentationText';`
           );
-        }
 
-        return socket.emit("presentationText", {
-          presentationTextInEnglish: titleInEnglish.replace(/[']/g, ""),
-          presentationTextInNepali: titleInNepali.replace(/[']/g, ""),
-        });
+          return socket.emit("presentationText", {
+            presentationTextInEnglish: result.titleInEnglish,
+            presentationTextInNepali: titleInNepali.replace(/[']/g, ""),
+          });
+        }
       });
     } catch (error) {
       return socket.emit("error", "Something went wrong");
