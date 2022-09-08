@@ -66,6 +66,43 @@ const surveyPermission = (socket, user) => {
       return socket.emit("error", "Something went wrong");
     }
   });
+
+  //on update survey
+  socket.on("update-survey", async (message) => {
+    try {
+      /*{
+        id: 2
+        questionInEnglish: "sdfsdfsdf",
+        questionInNepali: "sdfsdfsdf",
+        answers: "[{}, {}]",
+      }
+    */
+
+      const id = escape(message.id);
+      const questionInEnglish = escape(message.questionInEnglish);
+      const questionInNepali = escape(message.questionInNepali);
+      const answers = escape(JSON.stringify(message.answers));
+
+      const updateSurveyQuery = `UPDATE questions SET questionInEnglish = ${questionInEnglish}, questionInNepali = ${questionInNepali}, answers = ${answers} WHERE id = ${id};`;
+      const getAllQuestions = `SELECT * FROM questions`;
+
+      connection.query(updateSurveyQuery, (err, results) => {
+        if (err !== null) {
+          return socket.emit("error", "Something went wrong");
+        }
+
+        connection.query(getAllQuestions, (err, results) => {
+          if (err !== null) {
+            return socket.emit("error", "Something went wrong");
+          }
+
+          return socket.emit("questions", results);
+        });
+      });
+    } catch (e) {
+      return socket.emit("error", "Something went wrong");
+    }
+  });
 };
 
 module.exports = surveyPermission;

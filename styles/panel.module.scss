@@ -722,10 +722,37 @@
         padding: 1rem;
 
         .inputs {
-          p {
+          > p {
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
             font-weight: bold;
+          }
+
+          .actualInputs {
+            background-color: darken($light, 5%);
+            padding: 1rem;
+            margin-bottom: 2rem;
+
+            .inputHolder {
+              margin-bottom: 0.5rem;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+
+              input {
+                padding: 0.5rem;
+                width: 50px;
+              }
+
+              h4 {
+                margin-bottom: 1rem;
+              }
+
+              p {
+                margin-bottom: 0.5rem;
+              }
+            }
           }
 
           textarea {

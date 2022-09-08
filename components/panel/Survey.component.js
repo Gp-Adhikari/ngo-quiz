@@ -1,6 +1,6 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import gsap from "gsap";
@@ -23,6 +23,13 @@ const Survey = () => {
   const [removeSelectedSurvey, setRemoveSelectedSurvey] = useState(undefined);
 
   const [clicks, setClicks] = useState(0);
+
+  const [editedSurvey, setEditedSurvey] = useState({
+    id: undefined,
+    questionInEnglish: undefined,
+    questionInNepali: undefined,
+    answers: [],
+  });
 
   const removeSurvey = (qno, id) => {
     try {
@@ -51,9 +58,20 @@ const Survey = () => {
     } catch (error) {}
   };
 
-  const editSurvey = (selected) => {
+  useEffect(() => {
+    console.log(editedSurvey);
+  }, [editedSurvey]);
+
+  const editSurvey = (selectedQuestion) => {
     try {
       document.body.style.overflow = "hidden";
+
+      setEditedSurvey({
+        id: selectedQuestion.id,
+        questionInEnglish: selectedQuestion.questionInEnglish,
+        questionInNepali: selectedQuestion.questionInNepali,
+        answers: JSON.parse(selectedQuestion.answers),
+      });
 
       gsap.fromTo(
         editPopupRef.current,
@@ -236,6 +254,16 @@ const Survey = () => {
         setAnswers([]);
       }
     } catch (error) {}
+  };
+
+  const updateSurvey = (editedSurvey) => {
+    if (editedSurvey.id === undefined) {
+      return;
+    }
+
+    if (adminSocket !== null) {
+      adminSocket.emit("update-survey", editedSurvey);
+    }
   };
 
   return (
@@ -473,16 +501,125 @@ const Survey = () => {
             <div className={styles.popupContent}>
               <div className={styles.inputs}>
                 <p>Question</p>
-                <textarea></textarea>
+                <div className={styles.actualInputs}>
+                  <div className={styles.inputHolder}>
+                    <p>English</p>
+                    <textarea
+                      value={
+                        editedSurvey.questionInEnglish !== undefined
+                          ? editedSurvey.questionInEnglish
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditedSurvey((prevState) => ({
+                          ...prevState,
+                          questionInEnglish: e.target.value,
+                        }))
+                      }
+                    ></textarea>
+                  </div>
+                  <div className={styles.inputHolder}>
+                    <p>Nepali</p>
+                    <textarea
+                      value={
+                        editedSurvey.questionInNepali !== undefined
+                          ? editedSurvey.questionInNepali
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setEditedSurvey((prevState) => ({
+                          ...prevState,
+                          questionInNepali: e.target.value,
+                        }))
+                      }
+                    ></textarea>
+                  </div>
+                </div>
               </div>
               <div className={styles.inputs}>
                 <p>Answers</p>
-                <textarea></textarea>
-                <textarea></textarea>
-                <textarea></textarea>
+                {editedSurvey.answers[0] !== undefined &&
+                  editedSurvey.answers.map((answer) => (
+                    <div
+                      className={styles.actualInputs}
+                      key={answer.answerNumber}
+                    >
+                      <div className={styles.inputHolder}>
+                        <h4>Answer {answer.answerNumber}</h4>
+                        <p>English</p>
+                        <textarea
+                          value={answer.answerInEnglish}
+                          onChange={(e) => {
+                            const objIndex = editedSurvey.answers.findIndex(
+                              (obj) => obj.answerNumber === answer.answerNumber
+                            );
+                            const currentlyEditedAnswer = editedSurvey.answers;
+
+                            currentlyEditedAnswer[objIndex].answerInEnglish =
+                              e.target.value;
+
+                            setEditedSurvey((prevState) => ({
+                              ...prevState,
+                              answers: currentlyEditedAnswer,
+                            }));
+                          }}
+                        ></textarea>
+                      </div>
+                      <div className={styles.inputHolder}>
+                        <p>Nepali</p>
+                        <textarea
+                          value={answer.answerInNepali}
+                          onChange={(e) => {
+                            const objIndex = editedSurvey.answers.findIndex(
+                              (obj) => obj.answerNumber === answer.answerNumber
+                            );
+                            const currentlyEditedAnswer = editedSurvey.answers;
+
+                            currentlyEditedAnswer[objIndex].answerInNepali =
+                              e.target.value;
+
+                            setEditedSurvey((prevState) => ({
+                              ...prevState,
+                              answers: currentlyEditedAnswer,
+                            }));
+                          }}
+                        ></textarea>
+                      </div>
+                      <div className={styles.inputHolder}>
+                        <p>Points</p>
+                        <input
+                          type="number"
+                          value={
+                            answer.points === "" ? "" : parseInt(answer.points)
+                          }
+                          onChange={(e) => {
+                            const objIndex = editedSurvey.answers.findIndex(
+                              (obj) => obj.answerNumber === answer.answerNumber
+                            );
+                            const currentlyEditedAnswer = editedSurvey.answers;
+
+                            currentlyEditedAnswer[objIndex].points =
+                              e.target.value;
+
+                            setEditedSurvey((prevState) => ({
+                              ...prevState,
+                              answers: currentlyEditedAnswer,
+                            }));
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
               </div>
               <div className={styles.buttons}>
-                <button>Update</button>
+                <button
+                  onClick={() => {
+                    updateSurvey(editedSurvey);
+                    closeEditSurvey();
+                  }}
+                >
+                  Update
+                </button>
               </div>
             </div>
           </div>

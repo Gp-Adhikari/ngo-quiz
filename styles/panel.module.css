@@ -664,10 +664,31 @@
   border-radius: 0 0 5px 5px;
   padding: 1rem;
 }
-.tableContainer .removePopup .popup .popupContent .inputs p {
+.tableContainer .removePopup .popup .popupContent .inputs > p {
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
   font-weight: bold;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs {
+  background-color: #f2f2f2;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder {
+  margin-bottom: 0.5rem;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder:last-child {
+  margin-bottom: 0;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder input {
+  padding: 0.5rem;
+  width: 50px;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder h4 {
+  margin-bottom: 1rem;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder p {
+  margin-bottom: 0.5rem;
 }
 .tableContainer .removePopup .popup .popupContent .inputs textarea {
   padding: 0.5rem;
