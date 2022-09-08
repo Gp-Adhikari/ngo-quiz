@@ -3,9 +3,13 @@ import Loading from "../components/Loading.component";
 
 import io from "socket.io-client";
 
+import { useRouter } from "next/router";
+
 export const TokenContext = createContext(null);
 
 const TokenContextProvider = ({ children }) => {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState("");
 
@@ -21,6 +25,33 @@ const TokenContextProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
 
   const [language, setLanguage] = useState("en");
+
+  //get token every 12 minutes
+  const MINUTE_MS = 1000 * 60 * 8;
+
+  useEffect(() => {
+    if (token !== "" || token !== undefined || token !== null) {
+      const interval = setInterval(() => {
+        fetch("/token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === true) {
+              setToken(data.token);
+            } else {
+              router.replace("/panel/login");
+            }
+          });
+      }, MINUTE_MS);
+
+      return () => clearInterval(interval);
+    }
+  }, [token]);
 
   //connect to socket
   useEffect(() => {
@@ -38,7 +69,7 @@ const TokenContextProvider = ({ children }) => {
         },
       })
     );
-  }, []);
+  }, [token]);
 
   //get token if refresh token exists in cookie
   useEffect(() => {
@@ -52,7 +83,6 @@ const TokenContextProvider = ({ children }) => {
         .then((data) => {
           if (data.status === true) {
             setToken(data.token);
-            console.log(data.token);
             setAdminSocket(
               io.connect("/connect", {
                 transports: ["websocket"],

@@ -1,9 +1,10 @@
 const { escape } = require("mysql");
 
 const config = require("../config/databaseConfig");
+const verifyToken = require("../middleware/verifyToken");
 const connection = config.connection;
 
-const surveyPermission = (socket, user) => {
+const surveyPermission = (socket) => {
   //on add survey
   socket.on("add-survey", async (message) => {
     try {
@@ -12,6 +13,8 @@ const surveyPermission = (socket, user) => {
         questionInNepali: "sdfsdfsdf",
         answers: "[{}, {}]",
     */
+
+      verifyToken(socket);
 
       const questionInEnglish = escape(message.questionInEnglish);
       const questionInNepali = escape(message.questionInNepali);
@@ -43,6 +46,8 @@ const surveyPermission = (socket, user) => {
       /*
         id: 2
         */
+
+      verifyToken(socket);
 
       const id = parseInt(escape(message.id));
 
@@ -77,6 +82,8 @@ const surveyPermission = (socket, user) => {
         answers: "[{}, {}]",
       }
     */
+
+      verifyToken(socket);
 
       const id = escape(message.id);
       const questionInEnglish = escape(message.questionInEnglish);

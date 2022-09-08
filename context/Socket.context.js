@@ -51,7 +51,12 @@ const SocketContextProvider = ({ children }) => {
   //handle admin socket
   useEffect(() => {
     try {
-      if (adminSocket !== null) {
+      if (
+        adminSocket !== null &&
+        token !== null &&
+        token !== undefined &&
+        token !== ""
+      ) {
         try {
           adminSocket.on("connect", () => {
             //get initial data

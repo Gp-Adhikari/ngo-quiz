@@ -58,10 +58,6 @@ const Survey = () => {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    console.log(editedSurvey);
-  }, [editedSurvey]);
-
   const editSurvey = (selectedQuestion) => {
     try {
       document.body.style.overflow = "hidden";
@@ -118,7 +114,6 @@ const Survey = () => {
   };
 
   const handleRemoveSurvey = (removeSelectedSurvey) => {
-    console.log(removeSelectedSurvey);
     if (adminSocket !== null) {
       adminSocket.emit("remove-survey", {
         id: removeSelectedSurvey,

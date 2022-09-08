@@ -1,9 +1,10 @@
 const { escape } = require("mysql");
 
 const config = require("../config/databaseConfig");
+const verifyToken = require("../middleware/verifyToken");
 const connection = config.connection;
 
-const titlePermission = (socket, user) => {
+const titlePermission = (socket) => {
   //on change title
   socket.on("change-title", async (message) => {
     try {
@@ -11,6 +12,9 @@ const titlePermission = (socket, user) => {
         titleInEnglish: "new title",
         titleInNepali: "new title",
       */
+
+      verifyToken(socket);
+
       const titleInEnglish = escape(message.titleInEnglish);
       const titleInNepali = escape(message.titleInNepali);
 
@@ -88,6 +92,9 @@ const titlePermission = (socket, user) => {
         presentationTextInEnglish: "new title",
         presentationTextInNepali: "new title",
       */
+
+      verifyToken(socket);
+
       const titleInEnglish = escape(message.presentationTextInEnglish);
       const titleInNepali = escape(message.presentationTextInNepali);
 
