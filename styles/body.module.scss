@@ -58,7 +58,7 @@
 }
 
 .chooseCandidate {
-  max-width: 400px;
+  max-width: 475px;
   width: 100%;
   height: fit-content;
   margin: 0 auto;
@@ -69,6 +69,7 @@
   padding: 3rem;
   border-radius: 1rem;
   backdrop-filter: blur(4px);
+  text-align: center;
 
   h1 {
     font-size: 35px;
@@ -228,6 +229,8 @@
   position: relative;
   z-index: 5;
   color: $light;
+  overflow-y: auto;
+  height: calc(100vh - 150px);
 
   .displayQuestionNumber {
     text-align: center;
@@ -244,15 +247,29 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: $main;
+      font-size: 30px;
+    }
   }
 
   .candidate {
     background-color: $light-dark;
     width: 100%;
+    // height: fit-content;
     padding: 1rem;
     border-radius: 1rem;
+    margin-bottom: 2rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     h3 {
+      text-transform: capitalize;
       text-align: center;
       padding-bottom: 1rem;
       margin-bottom: 1rem;
@@ -260,6 +277,14 @@
     }
     .percentage {
       text-align: center;
+
+      > p {
+        margin-bottom: 1rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
     .percent {
       font-size: 2rem;
@@ -336,6 +361,18 @@
   }
 }
 @media screen and (max-width: 420px) {
+  .heroImg {
+    width: 300px;
+    height: 150px;
+  }
+}
+@media screen and (max-width: 350px) {
+  .heroImg {
+    width: 200px;
+    height: 100px;
+  }
+}
+@media screen and (max-width: 220px) {
   .heroImg {
     display: none;
   }

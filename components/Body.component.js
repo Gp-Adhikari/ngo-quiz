@@ -18,7 +18,7 @@ const Body = () => {
     qualityText,
   } = useContext(DataContext);
 
-  const { language, presentationText, questions, activeUsersSocket } =
+  const { language, presentationText, questions, candidate } =
     useContext(TokenContext);
 
   const { setInitialAnimationHandler, headerRef } =
@@ -244,7 +244,8 @@ const Body = () => {
       <section className={styles.quizContainer} ref={quizContainerRef}>
         <div className={styles.displayQuestionNumber}>
           <h2>
-            Question {currentQuestion + 1} / {questions.length}
+            Question {currentQuestion + 1} /{" "}
+            {questions === null ? 1 : questions.length}
           </h2>
         </div>
         <div className={styles.quizWrapper}>
@@ -300,11 +301,42 @@ const Body = () => {
         </div>
 
         <div className={styles.resultContainer}>
-          <div className={styles.candidate}>
-            <h3>{candidateName}</h3>
-            <div className={styles.percentage}>
-              <div className={styles.percent}>{percentage}</div>
-              {qualityText}
+          <div>
+            <div className={styles.candidate}>
+              <h3>{candidateName}</h3>
+              <div className={styles.percentage}>
+                <div className={styles.percent}>{percentage}</div>
+                {qualityText}
+              </div>
+            </div>
+
+            <div className={styles.candidate}>
+              <h2>Average Score:</h2>
+              <div className={styles.percentage}>
+                <h3>{candidateName}</h3>
+                <div className={styles.percent}>
+                  {candidate !== null ? candidate.averageScore : "Loading..."}
+                </div>
+                {candidate === null ? (
+                  "Loading..."
+                ) : candidate.averageScore < 20 ? (
+                  <p style={{ color: "red" }}>Poor</p>
+                ) : candidate.averageScore < 40 ? (
+                  <p style={{ color: "green" }}>Fair</p>
+                ) : candidate.averageScore < 60 ? (
+                  <p style={{ color: "green" }}>Good</p>
+                ) : candidate.averageScore < 80 ? (
+                  <p style={{ color: "lightgreen" }}>Very Good</p>
+                ) : candidate.averageScore < 100 ? (
+                  <p style={{ color: "lightgreen" }}>Excellent</p>
+                ) : candidate.averageScore >= 100 ? (
+                  <p style={{ color: "lightgreen" }}>Outstanding</p>
+                ) : null}
+                <p>
+                  Total Survey:{" "}
+                  {candidate !== null ? candidate.timesSearched : "Loading..."}
+                </p>
+              </div>
             </div>
           </div>
           <div className={styles.candidate}>

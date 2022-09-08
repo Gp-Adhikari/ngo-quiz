@@ -64,6 +64,9 @@ const SideNav = (props, ref) => {
             <p>Candidates</p>
           </div>
         </nav>
+        <div className={styles.logoutWrapper}>
+          <button className={styles.logout}>Logout</button>
+        </div>
       </div>
     </>
   );

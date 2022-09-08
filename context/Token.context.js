@@ -22,7 +22,7 @@ const TokenContextProvider = ({ children }) => {
   const [title, setTitle] = useState(null);
   const [presentationText, setPresentationText] = useState(null);
 
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState(null);
   const [candidate, setCandidate] = useState([]);
   const [candidates, setCandidates] = useState([]);
 

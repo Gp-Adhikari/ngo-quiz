@@ -1,6 +1,6 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import Image from "next/image";
 import gsap from "gsap";
@@ -243,6 +243,8 @@ const Survey = () => {
           answers: answers,
         });
 
+        window.scrollTo(0, 0);
+
         setQuestionInEnglish("");
         setQuestionInNepali("");
         setClicks(0);
@@ -411,11 +413,11 @@ const Survey = () => {
           <tbody>
             {questions === null ? (
               <tr>
-                <td colSpan={4}>No Data Available.</td>
+                <td colSpan={4}>Loading...</td>
               </tr>
             ) : questions[0] === undefined ? (
               <tr>
-                <td colSpan={4}>Loading...</td>
+                <td colSpan={4}>No Data Available.</td>
               </tr>
             ) : (
               questions.map((question, index) => (

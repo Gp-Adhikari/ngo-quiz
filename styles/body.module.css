@@ -57,7 +57,7 @@
 }
 
 .chooseCandidate {
-  max-width: 400px;
+  max-width: 475px;
   width: 100%;
   height: -webkit-fit-content;
   height: -moz-fit-content;
@@ -71,6 +71,7 @@
   border-radius: 1rem;
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
+  text-align: center;
 }
 .chooseCandidate h1 {
   font-size: 35px;
@@ -223,6 +224,8 @@
   position: relative;
   z-index: 5;
   color: #fff;
+  overflow-y: auto;
+  height: calc(100vh - 150px);
 }
 .result .displayQuestionNumber {
   text-align: center;
@@ -239,13 +242,24 @@
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
+.result .resultContainer h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #f37168;
+  font-size: 30px;
+}
 .result .candidate {
   background-color: #0e0e1e;
   width: 100%;
   padding: 1rem;
   border-radius: 1rem;
+  margin-bottom: 2rem;
+}
+.result .candidate:last-child {
+  margin-bottom: 0;
 }
 .result .candidate h3 {
+  text-transform: capitalize;
   text-align: center;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
@@ -253,6 +267,12 @@
 }
 .result .candidate .percentage {
   text-align: center;
+}
+.result .candidate .percentage > p {
+  margin-bottom: 1rem;
+}
+.result .candidate .percentage > p:last-child {
+  margin-bottom: 0;
 }
 .result .candidate .percent {
   font-size: 2rem;
@@ -324,6 +344,18 @@
   }
 }
 @media screen and (max-width: 420px) {
+  .heroImg {
+    width: 300px;
+    height: 150px;
+  }
+}
+@media screen and (max-width: 350px) {
+  .heroImg {
+    width: 200px;
+    height: 100px;
+  }
+}
+@media screen and (max-width: 220px) {
   .heroImg {
     display: none;
   }

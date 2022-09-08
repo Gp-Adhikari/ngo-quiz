@@ -90,6 +90,29 @@
   background-color: $dark;
   color: $light;
 
+  .logoutWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logout {
+    border: none;
+    background: darken($main, 10%);
+    padding: 1rem 2rem;
+    margin: auto;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      background: darken($main, 20%);
+    }
+  }
+
   h2 {
     border-bottom: 1px solid #fff;
     margin: 0 1rem;

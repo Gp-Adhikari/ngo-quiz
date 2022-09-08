@@ -46,7 +46,7 @@ const DataContextProvider = ({ children }) => {
           setQualityText(<p style={{ color: "lightgreen" }}>Very Good</p>);
         } else if (total < 100) {
           setQualityText(<p style={{ color: "lightgreen" }}>Excellent</p>);
-        } else if (total > 100) {
+        } else if (total >= 100) {
           setQualityText(<p style={{ color: "lightgreen" }}>Outstanding</p>);
         }
 
