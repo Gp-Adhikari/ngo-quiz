@@ -16,6 +16,9 @@ const Body = () => {
     setSelectedAnswers,
     percentage,
     qualityText,
+    setPercentage,
+    setQualityText,
+    setPercentagePerQuestion,
   } = useContext(DataContext);
 
   const { language, presentationText, questions, candidate } =
@@ -125,7 +128,7 @@ const Body = () => {
   };
 
   //submit Answer
-  const submitAnswer = (e, actualAnswer, actualQuestion) => {
+  const submitAnswer = (e, actualAnswer) => {
     try {
       const ans = e.target.children[1].innerText;
 
@@ -172,6 +175,10 @@ const Body = () => {
               {
                 opacity: 1,
                 transform: "scale(1)",
+
+                onComplete: () => {
+                  gsap.set(quizContainerRef.current, { clearProps: "all" });
+                },
               },
               "+=0.3"
             );
@@ -183,6 +190,12 @@ const Body = () => {
         }
       }
     } catch (error) {}
+  };
+
+  //handleRetakeSurvey
+
+  const handleRetakeSurvey = () => {
+    window.location.reload();
   };
 
   return (
@@ -275,7 +288,7 @@ const Body = () => {
                         ? JSON.parse(data.answers).map((answer, idx) => (
                             <div
                               className={styles.answer}
-                              onClick={(e) => submitAnswer(e, answer, data)}
+                              onClick={(e) => submitAnswer(e, answer)}
                               key={idx}
                             >
                               <div className={styles.circle}>
@@ -298,6 +311,17 @@ const Body = () => {
       <div className={styles.result} ref={resultRef}>
         <div className={styles.displayQuestionNumber}>
           <h2>Result</h2>
+        </div>
+
+        <div className={styles.retakeSurveyContainer}>
+          <button
+            className={styles.retakeSurvey}
+            onClick={() => {
+              handleRetakeSurvey();
+            }}
+          >
+            Retake the Survey
+          </button>
         </div>
 
         <div className={styles.resultContainer}>

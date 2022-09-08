@@ -77,6 +77,9 @@ const DataContextProvider = ({ children }) => {
         setSelectedAnswers,
         percentage,
         qualityText,
+        setPercentagePerQuestion,
+        setPercentage,
+        setQualityText,
       }}
     >
       {children}

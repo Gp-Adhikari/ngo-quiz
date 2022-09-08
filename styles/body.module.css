@@ -227,6 +227,26 @@
   overflow-y: auto;
   height: calc(100vh - 150px);
 }
+.result .retakeSurveyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.result .retakeSurvey {
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  background-color: #ef4539;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s ease;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.result .retakeSurvey:hover {
+  background-color: #e32012;
+  transform: scale(0.98);
+}
 .result .displayQuestionNumber {
   text-align: center;
   width: 100%;

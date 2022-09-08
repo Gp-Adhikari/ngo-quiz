@@ -232,6 +232,29 @@
   overflow-y: auto;
   height: calc(100vh - 150px);
 
+  .retakeSurveyContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .retakeSurvey {
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    background-color: darken($main, 10%);
+    cursor: pointer;
+    border: none;
+    transition: 0.2s ease;
+    font-weight: bold;
+    font-size: 1.1rem;
+
+    &:hover {
+      background-color: darken($main, 20%);
+      transform: scale(0.98);
+    }
+  }
+
   .displayQuestionNumber {
     text-align: center;
     width: 100%;

@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useContext } from "react";
 
 import styles from "../../styles/panel.module.css";
 
@@ -6,7 +6,30 @@ import DashboardIcon from "../../public/DashboardIcon";
 import CandidatesIcon from "../../public/CandidatesIcon";
 import SurveyIcon from "../../public/SurveyIcon";
 
+import { useRouter } from "next/router";
+import { TokenContext } from "../../context/Token.context";
+
 const SideNav = (props, ref) => {
+  const router = useRouter();
+
+  const { setLoading, setToken } = useContext(TokenContext);
+  const handleLogout = () => {
+    try {
+      setLoading(true);
+
+      fetch("/logout", {
+        method: "DELETE",
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setLoading(false);
+          setToken("");
+          router.replace("/panel/login");
+        });
+    } catch (error) {}
+  };
+
   return (
     <>
       <div className={styles.sideNav} ref={ref}>
@@ -65,7 +88,9 @@ const SideNav = (props, ref) => {
           </div>
         </nav>
         <div className={styles.logoutWrapper}>
-          <button className={styles.logout}>Logout</button>
+          <button className={styles.logout} onClick={() => handleLogout()}>
+            Logout
+          </button>
         </div>
       </div>
     </>
