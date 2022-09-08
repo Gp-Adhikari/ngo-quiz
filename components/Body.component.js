@@ -18,7 +18,8 @@ const Body = () => {
     qualityText,
   } = useContext(DataContext);
 
-  const { language, presentationText, questions } = useContext(TokenContext);
+  const { language, presentationText, questions, activeUsersSocket } =
+    useContext(TokenContext);
 
   const { setInitialAnimationHandler, headerRef } =
     useContext(AnimationContext);
@@ -151,6 +152,8 @@ const Body = () => {
 
           //if all answers are selected
           if (questions.length - 1 === selectedAnswers.length) {
+            //all answers are selected
+
             const tl = new gsap.timeline();
 
             tl.to(quizContainerRef.current, 0.5, {

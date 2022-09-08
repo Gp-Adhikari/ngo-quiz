@@ -23,6 +23,8 @@ const TokenContextProvider = ({ children }) => {
   const [presentationText, setPresentationText] = useState(null);
 
   const [questions, setQuestions] = useState([]);
+  const [candidate, setCandidate] = useState([]);
+  const [candidates, setCandidates] = useState([]);
 
   const [language, setLanguage] = useState("en");
 
@@ -127,6 +129,10 @@ const TokenContextProvider = ({ children }) => {
         setPresentationText,
         questions,
         setQuestions,
+        candidates,
+        setCandidates,
+        candidate,
+        setCandidate,
       }}
     >
       <Loading loading={loading} />

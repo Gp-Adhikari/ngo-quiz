@@ -1,3 +1,5 @@
+const addCandidate = require("../utils/addCandidate");
+
 const config = require("../config/databaseConfig");
 const connection = config.connection;
 
@@ -104,8 +106,22 @@ module.exports = (connectUsers) => {
         return socket.emit("error", "Something went wrong");
       }
 
-      return socket.emit("questions", results);
+      socket.emit("questions", results);
     });
+
+    //send all candidates
+    const getAllCandidates = `SELECT * FROM candidates`;
+
+    connection.query(getAllCandidates, (err, results) => {
+      if (err !== null) {
+        return socket.emit("error", "Something went wrong");
+      }
+
+      socket.emit("candidates", results);
+    });
+
+    //add candidates
+    addCandidate(socket, connectUsers);
 
     socket.on("disconnect", () => {
       connectedUsers--;

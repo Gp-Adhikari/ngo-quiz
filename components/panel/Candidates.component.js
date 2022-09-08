@@ -1,7 +1,11 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
+import { useContext } from "react";
+import { TokenContext } from "../../context/Token.context";
 
 const Candidates = () => {
+  const { candidates } = useContext(TokenContext);
+
   return (
     <>
       <AdminHead title="Candidates" />
@@ -18,12 +22,30 @@ const Candidates = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Gp Adhikari</td>
-              <td>123</td>
-              <td>35.6</td>
-            </tr>
+            {candidates === null ? (
+              <tr>
+                <td colSpan={4}>No Data Available.</td>
+              </tr>
+            ) : candidates[0] === undefined ? (
+              <tr>
+                <td colSpan={4}>Loading.</td>
+              </tr>
+            ) : (
+              candidates.map((candidate, index) => (
+                <tr>
+                  <td>{index + 1}</td>
+                  <td style={{ textTransform: "capitalize" }}>
+                    {candidate.name}
+                  </td>
+                  <td>
+                    {candidate.timesSearched
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  </td>
+                  <td>{candidate.averageScore}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

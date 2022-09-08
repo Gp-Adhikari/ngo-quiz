@@ -14,6 +14,8 @@ const SocketContextProvider = ({ children }) => {
     setTitle,
     setPresentationText,
     setQuestions,
+    setCandidates,
+    setCandidate,
   } = useContext(TokenContext);
 
   //handle active users socket
@@ -41,6 +43,14 @@ const SocketContextProvider = ({ children }) => {
 
             activeUsersSocket.on("questions", (msg) => {
               setQuestions(msg);
+            });
+
+            activeUsersSocket.on("candidates", (msg) => {
+              setCandidates(msg);
+            });
+
+            activeUsersSocket.on("candidate", (msg) => {
+              setCandidate(msg);
             });
           });
         } catch (error) {}
