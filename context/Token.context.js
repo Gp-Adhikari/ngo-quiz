@@ -47,7 +47,7 @@ const TokenContextProvider = ({ children }) => {
               if (data.status === true) {
                 setToken(data.token);
               } else {
-                router.replace("/panel/login");
+                setToken("");
               }
             });
         }, MINUTE_MS);

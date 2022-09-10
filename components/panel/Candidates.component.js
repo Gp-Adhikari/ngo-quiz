@@ -32,7 +32,7 @@ const Candidates = () => {
               </tr>
             ) : (
               candidates.map((candidate, index) => (
-                <tr>
+                <tr key={index}>
                   <td>{index + 1}</td>
                   <td style={{ textTransform: "capitalize" }}>
                     {candidate.name}
