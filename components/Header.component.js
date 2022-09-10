@@ -27,7 +27,7 @@ const Header = () => {
         {hideElements ? (
           <span className={styles.title} style={{ opacity: 0 }}>
             {title === null ? (
-              ""
+              "Loading..."
             ) : language === "en" ? (
               <>{title.titleInEnglish}</>
             ) : (

@@ -220,7 +220,7 @@ const Body = () => {
         >
           <h1>
             {presentationText === null ? (
-              ""
+              "Loading..."
             ) : language === "en" ? (
               <>{presentationText.presentationTextInEnglish}</>
             ) : (
