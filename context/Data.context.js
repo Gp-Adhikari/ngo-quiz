@@ -14,27 +14,28 @@ const DataContextProvider = ({ children }) => {
 
   const [qualityText, setQualityText] = useState("");
 
+  //seperate points
   useEffect(() => {
     try {
       for (let i = 0; i < selectedAnswers.length; i++) {
         const answer = selectedAnswers[i];
 
-        setPercentagePerQuestion([...percentagePerQuestion, answer.points]);
+        setPercentagePerQuestion([
+          ...percentagePerQuestion,
+          parseFloat(answer.points),
+        ]);
       }
     } catch (error) {}
   }, [selectedAnswers, setPercentagePerQuestion]);
 
+  //calculate result
   useEffect(() => {
-    try {
-      //calculate points
-      for (let i = 0; i < percentagePerQuestion.length; i++) {
-        const percentOfThisQuestion = percentagePerQuestion[i];
-        const prevPercentage = percentagePerQuestion[i - 1];
-
-        const total =
-          prevPercentage === undefined
-            ? percentOfThisQuestion
-            : prevPercentage + percentOfThisQuestion;
+    if (questions !== null && questions.length > 0) {
+      if (questions.length === percentagePerQuestion.length) {
+        const total = percentagePerQuestion.reduce(
+          (partialSum, a) => partialSum + a,
+          0
+        );
 
         if (total < 20) {
           setQualityText(<p style={{ color: "red" }}>Poor</p>);
@@ -52,21 +53,15 @@ const DataContextProvider = ({ children }) => {
 
         setPercentage(total);
 
-        if (
-          questions.length !== 0 &&
-          percentagePerQuestion.length === questions.length &&
-          i === percentagePerQuestion.length - 1
-        ) {
-          if (activeUsersSocket !== null) {
-            activeUsersSocket.emit("add-candidate", {
-              candidateName: candidateName,
-              score: total,
-            });
-          }
+        if (activeUsersSocket !== null) {
+          activeUsersSocket.emit("add-candidate", {
+            candidateName: candidateName,
+            score: total,
+          });
         }
       }
-    } catch (error) {}
-  }, [percentagePerQuestion, setPercentage, questions]);
+    }
+  }, [percentagePerQuestion, questions]);
 
   return (
     <DataContext.Provider
