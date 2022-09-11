@@ -632,6 +632,7 @@
         color: $light;
         min-width: 100px;
         max-width: 200px;
+
         &:first-child {
           text-align: center;
           min-width: 100px;
@@ -863,6 +864,9 @@
         color: $light;
         min-width: 100px;
         max-width: 200px;
+        cursor: pointer;
+        user-select: none;
+
         &:first-child {
           text-align: center;
           min-width: 100px;

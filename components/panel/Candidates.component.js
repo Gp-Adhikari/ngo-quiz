@@ -4,7 +4,25 @@ import { useContext } from "react";
 import { TokenContext } from "../../context/Token.context";
 
 const Candidates = () => {
-  const { candidates } = useContext(TokenContext);
+  const { sortedCandidates, setSortBy, sortBy } = useContext(TokenContext);
+
+  const handleSetSortBy = (text) => {
+    if (sortBy === "name") {
+      setSortBy("reverseName");
+      return;
+    }
+    if (sortBy === "searched") {
+      setSortBy("reverseSearched");
+      return;
+    }
+    if (sortBy === "score") {
+      setSortBy("reverseScore");
+      return;
+    }
+
+    setSortBy(text);
+    return;
+  };
 
   return (
     <>
@@ -15,23 +33,27 @@ const Candidates = () => {
         <table>
           <thead>
             <tr>
-              <th>Rank</th>
-              <th>Candidate&apos;s Name</th>
-              <th>Times Searched</th>
-              <th>Average Score</th>
+              <th onClick={() => handleSetSortBy("")}>Rank</th>
+              <th onClick={() => handleSetSortBy("name")}>
+                Candidate&apos;s Name
+              </th>
+              <th onClick={() => handleSetSortBy("searched")}>
+                Times Searched
+              </th>
+              <th onClick={() => handleSetSortBy("score")}>Average Score</th>
             </tr>
           </thead>
           <tbody>
-            {candidates === null ? (
+            {sortedCandidates === null ? (
               <tr>
                 <td colSpan={4}>Loading...</td>
               </tr>
-            ) : candidates[0] === undefined ? (
+            ) : sortedCandidates[0] === undefined ? (
               <tr>
                 <td colSpan={4}>No Data Available.</td>
               </tr>
             ) : (
-              candidates.map((candidate, index) => (
+              sortedCandidates.map((candidate, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td style={{ textTransform: "capitalize" }}>

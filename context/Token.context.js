@@ -25,6 +25,8 @@ const TokenContextProvider = ({ children }) => {
   const [questions, setQuestions] = useState(null);
   const [candidate, setCandidate] = useState([]);
   const [candidates, setCandidates] = useState(null);
+  const [sortedCandidates, setSortedCandidates] = useState(null);
+  const [sortBy, setSortBy] = useState("");
 
   const [language, setLanguage] = useState("en");
 
@@ -106,6 +108,67 @@ const TokenContextProvider = ({ children }) => {
     } catch (error) {}
   }, [setToken]);
 
+  //sort candidates
+  useEffect(() => {
+    if (candidates === null || candidates.length === 0) {
+      setSortedCandidates(candidates);
+      return;
+    }
+
+    if (sortBy == "") {
+      setSortedCandidates(candidates);
+      return;
+    }
+
+    if (sortBy == "name") {
+      const data = candidates.sort((a, b) => a.name.localeCompare(b.name));
+      setSortedCandidates([...data]);
+      return;
+    }
+
+    if (sortBy == "reverseName") {
+      const data = candidates.sort((a, b) => b.name.localeCompare(a.name));
+      setSortedCandidates([...data]);
+      return;
+    }
+
+    if (sortBy == "searched") {
+      const data = candidates.sort((a, b) => {
+        if (parseFloat(a.timesSearched) === Infinity) return 1;
+        else if (isNaN(parseFloat(a.timesSearched))) return -1;
+        else return parseFloat(b.timesSearched) - parseFloat(a.timesSearched);
+      });
+      setSortedCandidates([...data]);
+    }
+
+    if (sortBy == "reverseSearched") {
+      const data = candidates.sort((a, b) => {
+        if (parseFloat(a.timesSearched) === Infinity) return 1;
+        else if (isNaN(parseFloat(a.timesSearched))) return -1;
+        else return parseFloat(a.timesSearched) - parseFloat(b.timesSearched);
+      });
+      setSortedCandidates([...data]);
+    }
+
+    if (sortBy == "score") {
+      const data = candidates.sort((a, b) => {
+        if (parseFloat(a.averageScore) === Infinity) return 1;
+        else if (isNaN(parseFloat(a.averageScore))) return -1;
+        else return parseFloat(b.averageScore) - parseFloat(a.averageScore);
+      });
+      setSortedCandidates([...data]);
+    }
+
+    if (sortBy == "reverseScore") {
+      const data = candidates.sort((a, b) => {
+        if (parseFloat(a.averageScore) === Infinity) return 1;
+        else if (isNaN(parseFloat(a.averageScore))) return -1;
+        else return parseFloat(a.averageScore) - parseFloat(b.averageScore);
+      });
+      setSortedCandidates([...data]);
+    }
+  }, [candidates, sortBy]);
+
   return (
     <TokenContext.Provider
       value={{
@@ -133,6 +196,10 @@ const TokenContextProvider = ({ children }) => {
         setCandidates,
         candidate,
         setCandidate,
+        sortBy,
+        setSortBy,
+        sortedCandidates,
+        setSortedCandidates,
       }}
     >
       <Loading loading={loading} />
