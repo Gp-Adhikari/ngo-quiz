@@ -16,12 +16,9 @@ const Body = () => {
     setSelectedAnswers,
     percentage,
     qualityText,
-    setPercentage,
-    setQualityText,
-    setPercentagePerQuestion,
   } = useContext(DataContext);
 
-  const { language, presentationText, questions, candidate } =
+  const { language, presentationText, questions, candidate, candidates } =
     useContext(TokenContext);
 
   const { setInitialAnimationHandler, headerRef } =
@@ -36,9 +33,31 @@ const Body = () => {
   const answersRef = useRef(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
+  const [searchedCandidate, setSearchedCandidate] = useState("");
+
+  const [returnedSearchedCandidateValue, setReturnedSearchedCandidateValue] =
+    useState([]);
+
+  const [selectedComapareCandidates, setSelectedComapareCandidates] = useState(
+    []
+  );
+
   const resultRef = useRef(null);
 
   const [error, setError] = useState("");
+
+  const searchedData = (searchedValue) => {
+    if (candidates !== null && candidates.length > 0) {
+      if (searchedValue.length === 0) {
+        setReturnedSearchedCandidateValue([]);
+      } else {
+        const value = candidates.filter((str) => {
+          return str.name.toLowerCase().includes(searchedValue.toLowerCase());
+        });
+        setReturnedSearchedCandidateValue(value);
+      }
+    }
+  };
 
   // focus question
   useEffect(() => {
@@ -363,8 +382,89 @@ const Body = () => {
               </div>
             </div>
           </div>
-          <div className={styles.candidate}>
-            <input type={"text"} placeholder="+ Compare" />
+          <div>
+            <div className={styles.candidate}>
+              <input
+                type={"text"}
+                placeholder="+ Compare"
+                value={searchedCandidate}
+                onChange={(e) => {
+                  setSearchedCandidate(e.target.value);
+                  searchedData(e.target.value);
+                }}
+              />
+              {returnedSearchedCandidateValue[0] !== undefined && (
+                <div
+                  className={
+                    searchedCandidate.length > 0
+                      ? `${styles.compareCandidateHolder}`
+                      : `${styles.compareCandidateHolder} ${styles.compareCandidateHolderTransition}`
+                  }
+                >
+                  <h3>Search Terms</h3>
+                  {returnedSearchedCandidateValue[0] !== undefined
+                    ? returnedSearchedCandidateValue.map((searched, index) => (
+                        <div
+                          className={styles.returnedSearchedValue}
+                          key={index}
+                          onClick={() => {
+                            setSelectedComapareCandidates(
+                              [
+                                ...selectedComapareCandidates,
+                                searched,
+                              ].reverse()
+                            );
+
+                            setSearchedCandidate("");
+                            searchedData("");
+                          }}
+                        >
+                          <p>
+                            {index + 1}. {searched.name}
+                          </p>
+                        </div>
+                      ))
+                    : null}
+                </div>
+              )}
+            </div>
+
+            {selectedComapareCandidates[0] === undefined
+              ? null
+              : selectedComapareCandidates.map((selected, index) => (
+                  <div className={styles.candidate} key={index}>
+                    <h2>Average Score:</h2>
+                    <div className={styles.percentage}>
+                      <h3>{selected.name}</h3>
+                      <div className={styles.percent}>
+                        {selected.name !== null
+                          ? selected.averageScore
+                          : "Loading..."}
+                      </div>
+                      {selected === null ? (
+                        "Loading..."
+                      ) : selected.averageScore < 20 ? (
+                        <p style={{ color: "red" }}>Poor</p>
+                      ) : selected.averageScore < 40 ? (
+                        <p style={{ color: "green" }}>Fair</p>
+                      ) : selected.averageScore < 60 ? (
+                        <p style={{ color: "green" }}>Good</p>
+                      ) : selected.averageScore < 80 ? (
+                        <p style={{ color: "lightgreen" }}>Very Good</p>
+                      ) : selected.averageScore < 100 ? (
+                        <p style={{ color: "lightgreen" }}>Excellent</p>
+                      ) : selected.averageScore >= 100 ? (
+                        <p style={{ color: "lightgreen" }}>Outstanding</p>
+                      ) : null}
+                      <p>
+                        Total Survey:{" "}
+                        {selected !== null
+                          ? selected.timesSearched
+                          : "Loading..."}
+                      </p>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </div>

@@ -280,9 +280,10 @@
   }
 
   .candidate {
+    position: relative;
     background-color: $light-dark;
     width: 100%;
-    // height: fit-content;
+    height: fit-content;
     padding: 1rem;
     border-radius: 1rem;
     margin-bottom: 2rem;
@@ -318,7 +319,7 @@
       width: 100%;
       height: 100%;
       font-size: 3rem;
-      padding: 2rem;
+      padding: 2.345rem 2rem;
       border: none;
       color: #fff;
       background-color: transparent;
@@ -326,6 +327,53 @@
       &::placeholder {
         color: rgba(#fff, 0.7);
       }
+    }
+
+    .compareCandidateHolder {
+      opacity: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 10px;
+      max-height: 250px;
+      max-width: 400px;
+      width: 100%;
+      background-color: lighten($dark, 10%);
+      color: #fff;
+      user-select: none;
+      transition: 0.3s ease;
+      z-index: 2;
+
+      h3 {
+        padding: 1rem;
+        margin-bottom: 0;
+      }
+
+      .returnedSearchedValue {
+        padding: 1rem;
+        cursor: pointer;
+        border-bottom: 2px solid lighten($dark, 15%);
+        transition: 0.2s ease;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: lighten($dark, 15%);
+        }
+
+        p {
+          text-transform: capitalize;
+        }
+      }
+    }
+
+    .compareCandidateHolderTransition {
+      opacity: 0;
     }
   }
 }

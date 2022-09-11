@@ -269,8 +269,12 @@
   font-size: 30px;
 }
 .result .candidate {
+  position: relative;
   background-color: #0e0e1e;
   width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
   padding: 1rem;
   border-radius: 1rem;
   margin-bottom: 2rem;
@@ -302,7 +306,7 @@
   width: 100%;
   height: 100%;
   font-size: 3rem;
-  padding: 2rem;
+  padding: 2.345rem 2rem;
   border: none;
   color: #fff;
   background-color: transparent;
@@ -315,6 +319,49 @@
 }
 .result .candidate input::placeholder {
   color: rgba(255, 255, 255, 0.7);
+}
+.result .candidate .compareCandidateHolder {
+  opacity: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  max-height: 250px;
+  max-width: 400px;
+  width: 100%;
+  background-color: #171732;
+  color: #fff;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  transition: 0.3s ease;
+  z-index: 2;
+}
+.result .candidate .compareCandidateHolder h3 {
+  padding: 1rem;
+  margin-bottom: 0;
+}
+.result .candidate .compareCandidateHolder .returnedSearchedValue {
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid #1f1f43;
+  transition: 0.2s ease;
+}
+.result .candidate .compareCandidateHolder .returnedSearchedValue:last-child {
+  border-bottom: none;
+}
+.result .candidate .compareCandidateHolder .returnedSearchedValue:hover {
+  background-color: #1f1f43;
+}
+.result .candidate .compareCandidateHolder .returnedSearchedValue p {
+  text-transform: capitalize;
+}
+.result .candidate .compareCandidateHolderTransition {
+  opacity: 0;
 }
 
 @media screen and (max-width: 1250px) {

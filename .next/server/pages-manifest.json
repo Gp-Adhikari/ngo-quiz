@@ -1,10 +1,7 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/404": "pages/404.html",
-  "/api/hello": "pages/api/hello.js",
-  "/": "pages/index.html",
-  "/panel": "pages/panel.html",
-  "/panel/login": "pages/panel/login.html",
-  "/_document": "pages/_document.js"
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/panel": "pages/panel.js"
 }

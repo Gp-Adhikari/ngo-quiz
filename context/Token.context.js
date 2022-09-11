@@ -24,7 +24,7 @@ const TokenContextProvider = ({ children }) => {
 
   const [questions, setQuestions] = useState(null);
   const [candidate, setCandidate] = useState([]);
-  const [candidates, setCandidates] = useState([]);
+  const [candidates, setCandidates] = useState(null);
 
   const [language, setLanguage] = useState("en");
 

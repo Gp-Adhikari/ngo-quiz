@@ -24,11 +24,11 @@ const Candidates = () => {
           <tbody>
             {candidates === null ? (
               <tr>
-                <td colSpan={4}>No Data Available.</td>
+                <td colSpan={4}>Loading...</td>
               </tr>
             ) : candidates[0] === undefined ? (
               <tr>
-                <td colSpan={4}>Loading.</td>
+                <td colSpan={4}>No Data Available.</td>
               </tr>
             ) : (
               candidates.map((candidate, index) => (
