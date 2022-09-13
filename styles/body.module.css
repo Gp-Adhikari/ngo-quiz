@@ -1,3 +1,75 @@
+.chooseLanguageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(7, 7, 15, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.chooseLanguageContainer .chooseLanguage {
+  margin: 1rem;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+}
+.chooseLanguageContainer .chooseLanguage .center {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageHeading {
+  width: 100%;
+  padding: 1rem;
+  background-color: #07070f;
+  color: #fff;
+  border-radius: 5px 5px 0 0;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageWrapper {
+  margin: 1.5rem 1rem;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px 0 rgba(7, 7, 15, 0.15);
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs .tickImg {
+  opacity: 0;
+  transition: 0.2s ease;
+  pointer-events: none;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs:first-child {
+  margin-top: 0;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs:hover {
+  box-shadow: 0 4px 10px 0 rgba(7, 7, 15, 0.2);
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs:hover .tickImg {
+  opacity: 1;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs p {
+  margin-left: 1rem;
+}
+.chooseLanguageContainer .chooseLanguage .chooseLanguageInputs .img {
+  position: relative;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 1rem;
+}
+
 .wrapper {
   max-width: 1200px;
   width: 100%;

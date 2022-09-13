@@ -346,6 +346,7 @@ const Body = () => {
         <div className={styles.resultContainer}>
           <div>
             <div className={styles.candidate}>
+              <h2>Your Score:</h2>
               <h3>{candidateName}</h3>
               <div className={styles.percentage}>
                 <div className={styles.percent}>{percentage}</div>

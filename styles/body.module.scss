@@ -1,5 +1,91 @@
 @import "./colors";
 
+.chooseLanguageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba($dark, 0.8);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  .chooseLanguage {
+    margin: 1rem;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: $bg-color;
+
+    .center {
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .chooseLanguageHeading {
+      width: 100%;
+      padding: 1rem;
+      background-color: $dark;
+      color: $light;
+      border-radius: 5px 5px 0 0;
+    }
+
+    .chooseLanguageWrapper {
+      margin: 1.5rem 1rem;
+    }
+
+    .chooseLanguageInputs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 5px;
+      background-color: $light;
+      box-shadow: 0 4px 10px 0 rgba($dark, 0.15);
+      transition: 0.2s ease;
+      cursor: pointer;
+
+      .tickImg {
+        opacity: 0;
+        transition: 0.2s ease;
+        pointer-events: none;
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:hover {
+        box-shadow: 0 4px 10px 0 rgba($dark, 0.2);
+      }
+
+      &:hover .tickImg {
+        opacity: 1;
+      }
+
+      p {
+        margin-left: 1rem;
+      }
+
+      .img {
+        position: relative;
+        height: 24px;
+        width: 24px;
+
+        border-radius: 50%;
+        overflow: hidden;
+        padding: 1rem;
+      }
+    }
+  }
+}
+
 .wrapper {
   max-width: 1200px;
   width: 100%;
