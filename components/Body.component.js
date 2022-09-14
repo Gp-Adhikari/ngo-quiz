@@ -28,6 +28,7 @@ const Body = () => {
   const formRef = useRef(null);
   const lineRef = useRef(null);
   const quizContainerRef = useRef(null);
+  const disclaimerRef = useRef(null);
 
   const quizHolderRef = useRef(null);
   const answersRef = useRef(null);
@@ -183,24 +184,30 @@ const Body = () => {
               opacity: 0,
               display: "none",
               overflow: "hidden",
-            }).fromTo(
-              resultRef.current,
-              {
-                opacity: 0,
-                duration: 0.5,
-                transform: "scale(0.5)",
-                display: "block",
-              },
-              {
-                opacity: 1,
-                transform: "scale(1)",
-
-                onComplete: () => {
-                  gsap.set(quizContainerRef.current, { clearProps: "all" });
+            })
+              .fromTo(
+                resultRef.current,
+                {
+                  opacity: 0,
+                  duration: 0.5,
+                  transform: "scale(0.5)",
+                  display: "block",
                 },
-              },
-              "+=0.3"
-            );
+                {
+                  opacity: 1,
+                  transform: "scale(1)",
+
+                  onComplete: () => {
+                    gsap.set(quizContainerRef.current, { clearProps: "all" });
+                  },
+                },
+                "+=0.3"
+              )
+              .to(disclaimerRef.current, {
+                duration: 0.3,
+                opacity: 1,
+                display: "block",
+              });
 
             return;
           }
@@ -215,6 +222,21 @@ const Body = () => {
 
   const handleRetakeSurvey = () => {
     window.location.reload();
+  };
+
+  //close the disclaimerRef
+  const closeDisclaimer = () => {
+    try {
+      gsap.to(disclaimerRef.current, {
+        duration: 0.3,
+        opacity: 0,
+        display: "none",
+
+        onComplete: () => {
+          gsap.set(disclaimerRef.current, { clearProps: "all" });
+        },
+      });
+    } catch (error) {}
   };
 
   return (
@@ -468,6 +490,18 @@ const Body = () => {
                 ))}
           </div>
         </div>
+      </div>
+
+      <div className={styles.disclaimer} ref={disclaimerRef}>
+        <div className={styles.center}>
+          <h3>DISCLAIMER</h3>
+          <span onClick={() => closeDisclaimer()}>X</span>
+        </div>
+        <p>
+          This questionnaire is designed to help you ask relevant questions
+          about the candidate. It should not be taken absolutely. Please give us
+          a feedback at email@gmail.com. We will continue to improve it.
+        </p>
       </div>
     </div>
   );

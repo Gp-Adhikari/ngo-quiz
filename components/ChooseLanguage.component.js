@@ -10,13 +10,15 @@ const ChooseLanguage = () => {
   const { setLanguage } = useContext(TokenContext);
 
   const handleSelectLanguage = (lang) => {
-    setLanguage(lang);
+    try {
+      setLanguage(lang);
 
-    gsap.to(chooseLanguageContainerRef.current, {
-      duration: 0.3,
-      opacity: 0,
-      display: "none",
-    });
+      gsap.to(chooseLanguageContainerRef.current, {
+        duration: 0.3,
+        opacity: 0,
+        display: "none",
+      });
+    } catch (error) {}
   };
 
   return (

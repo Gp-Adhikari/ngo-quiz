@@ -436,12 +436,50 @@
   opacity: 0;
 }
 
+.disclaimer {
+  display: none;
+  max-width: 1200px;
+  opacity: 0;
+  position: fixed;
+  bottom: 0;
+  background-color: rgba(248, 248, 248, 0.85);
+  z-index: 10;
+  padding: 1rem;
+  margin: 1rem auto;
+  border-radius: 1rem;
+}
+.disclaimer span {
+  font-size: 20px;
+  color: #07070f;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.disclaimer p {
+  color: #07070f;
+}
+.disclaimer .center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.disclaimer h3 {
+  margin-bottom: 0.5rem;
+  color: #07070f;
+}
+
 @media screen and (max-width: 1250px) {
   .quizContainer {
     margin-left: 1rem;
     margin-right: 1rem;
   }
   .result {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .disclaimer {
     margin-left: 1rem;
     margin-right: 1rem;
   }
