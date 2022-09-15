@@ -492,16 +492,17 @@ const Body = () => {
         </div>
       </div>
 
-      <div className={styles.disclaimer} ref={disclaimerRef}>
-        <div className={styles.center}>
-          <h3>DISCLAIMER</h3>
-          <span onClick={() => closeDisclaimer()}>X</span>
+      <div className={styles.disclaimerContainer} ref={disclaimerRef}>
+        <div className={styles.disclaimer}>
+          <div className={styles.center}>
+            <h3>DISCLAIMER</h3>
+            <span onClick={() => closeDisclaimer()}>X</span>
+          </div>
+          <p>
+            This questionnaire is designed to help you ask relevant questions
+            about the candidate. It should not be taken absolutely.
+          </p>
         </div>
-        <p>
-          This questionnaire is designed to help you ask relevant questions
-          about the candidate. It should not be taken absolutely. Please give us
-          a feedback at email@gmail.com. We will continue to improve it.
-        </p>
       </div>
     </div>
   );
