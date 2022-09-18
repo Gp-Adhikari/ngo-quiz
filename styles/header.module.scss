@@ -11,7 +11,7 @@
 }
 
 .title {
-  font-size: 25px;
+  font-size: 18px;
   font-family: "Italianno", cursive;
 }
 
@@ -37,6 +37,16 @@
       background-color: $main;
     }
   }
+}
+
+.arrow {
+  user-select: none;
+  pointer-events: none;
+  margin-top: 1rem;
+  position: absolute;
+  rotate: -10deg;
+  top: 100%;
+  right: 15px;
 }
 
 @media screen and (max-width: 1250px) {

@@ -98,7 +98,7 @@
   max-width: 1200px;
   margin: auto;
   display: flex;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   overflow: hidden;
 }
 
@@ -210,17 +210,21 @@
   .displayQuestionNumber {
     text-align: center;
     width: 100%;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 0.8rem;
     border-bottom: 10px solid $main;
     background-color: $light-dark;
     font-weight: normal;
+
+    h2 {
+      font-size: 20px;
+    }
   }
 
   .quizWrapper {
     max-width: 500px;
     width: 100%;
-    margin: 2rem auto 0 auto;
+    margin: 1rem auto 0 auto;
     h4 {
       font-weight: normal;
       word-wrap: break-word;
@@ -231,9 +235,16 @@
     .quiz {
       margin: 2rem 0;
       transition: 0.3s ease;
+      pointer-events: none;
+      opacity: 0.4;
+
+      &:first-child {
+        pointer-events: all;
+        opacity: 1;
+      }
     }
     .quizHolder {
-      height: calc(100vh - 242px);
+      height: calc(100vh - 221px);
       overflow-y: auto;
       scroll-behavior: smooth;
       scrollbar-width: none;

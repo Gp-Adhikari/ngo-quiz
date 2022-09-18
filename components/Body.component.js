@@ -68,6 +68,8 @@ const Body = () => {
 
       const allQuestions = quizHolderRef.current.children;
 
+      console.log(currentQuestion, allQuestions.length);
+
       for (let i = 0; i < allQuestions.length; i++) {
         if (i !== currentQuestion) {
           allQuestions[i].style = `
@@ -75,7 +77,7 @@ const Body = () => {
           opacity: 0.4;
           `;
         } else {
-          quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 170;
+          quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 120;
 
           allQuestions[i].style = `
           pointer-events: all;
@@ -495,13 +497,20 @@ const Body = () => {
       <div className={styles.disclaimerContainer} ref={disclaimerRef}>
         <div className={styles.disclaimer}>
           <div className={styles.center}>
-            <h3>DISCLAIMER</h3>
+            {language === "en" ? <h3>DISCLAIMER</h3> : <h3>अस्वीकरण</h3>}
             <span onClick={() => closeDisclaimer()}>X</span>
           </div>
-          <p>
-            This questionnaire is designed to help you ask relevant questions
-            about the candidate. It should not be taken absolutely.
-          </p>
+          {language === "en" ? (
+            <p>
+              This questionnaire is designed to help you ask relevant questions
+              about the candidate. It should not be taken absolutely.
+            </p>
+          ) : (
+            <p>
+              यो प्रश्नावली तपाईंलाई उम्मेद्वारको बारेमा सान्दर्भिक प्रश्नहरू
+              सोध्न मद्दत गर्न डिजाइन गरिएको हो। यसलाई बिल्कुलै लिनु हुँदैन।
+            </p>
+          )}
         </div>
       </div>
     </div>

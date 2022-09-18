@@ -66,6 +66,11 @@ const Header = () => {
           नेपाली
         </p>
       </div>
+      {hideElements ? null : (
+        <div className={styles.arrow}>
+          <Image src={"/languageArrow.svg"} width={150} height={80} />
+        </div>
+      )}
     </header>
   );
 };

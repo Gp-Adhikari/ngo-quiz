@@ -82,7 +82,7 @@
   max-width: 1200px;
   margin: auto;
   display: flex;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   overflow: hidden;
 }
 
@@ -199,16 +199,19 @@
 .quizContainer .displayQuestionNumber {
   text-align: center;
   width: 100%;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 0.8rem;
   border-bottom: 10px solid #f37168;
   background-color: #0e0e1e;
   font-weight: normal;
 }
+.quizContainer .displayQuestionNumber h2 {
+  font-size: 20px;
+}
 .quizContainer .quizWrapper {
   max-width: 500px;
   width: 100%;
-  margin: 2rem auto 0 auto;
+  margin: 1rem auto 0 auto;
 }
 .quizContainer .quizWrapper h4 {
   font-weight: normal;
@@ -219,9 +222,15 @@
 .quizContainer .quizWrapper .quiz {
   margin: 2rem 0;
   transition: 0.3s ease;
+  pointer-events: none;
+  opacity: 0.4;
+}
+.quizContainer .quizWrapper .quiz:first-child {
+  pointer-events: all;
+  opacity: 1;
 }
 .quizContainer .quizWrapper .quizHolder {
-  height: calc(100vh - 242px);
+  height: calc(100vh - 221px);
   overflow-y: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
