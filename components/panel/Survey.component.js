@@ -1,6 +1,7 @@
 import AdminHead from "./AdminHead";
 import styles from "../../styles/panel.module.css";
 import React, { useContext, useRef, useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Image from "next/image";
 import gsap from "gsap";
@@ -8,7 +9,7 @@ import Answer from "./Answer.component";
 import { TokenContext } from "../../context/Token.context";
 
 const Survey = () => {
-  const { questions, adminSocket } = useContext(TokenContext);
+  const { questions, adminSocket, setQuestions } = useContext(TokenContext);
 
   const removePopupRef = useRef(null);
   const editPopupRef = useRef(null);
@@ -263,6 +264,29 @@ const Survey = () => {
     }
   };
 
+  const handleDragEnd = (results, questions) => {
+    try {
+      if (!results.destination) {
+        return;
+      }
+
+      let tempQuestions = [...questions];
+
+      const selectedRow = tempQuestions.splice(results.source.index, 1);
+
+      tempQuestions.splice(results.destination.index, 0, selectedRow[0]);
+
+      if (adminSocket !== null) {
+        adminSocket.emit("update-question-order", {
+          sourceId: results.source.index,
+          destinationId: results.destination.index,
+        });
+      }
+
+      setQuestions(tempQuestions);
+    } catch (error) {}
+  };
+
   return (
     <>
       <AdminHead title="Survey" />
@@ -401,83 +425,116 @@ const Survey = () => {
       <div className={styles.tableContainer}>
         <h1>Survey Questions</h1>
 
-        <table>
-          <thead>
-            <tr>
-              <th>SN</th>
-              <th>Question</th>
-              <th>Answers</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {questions === null ? (
+        <DragDropContext
+          onDragEnd={(results) => handleDragEnd(results, questions)}
+        >
+          <table>
+            <thead>
               <tr>
-                <td colSpan={4}>Loading...</td>
+                <th>SN</th>
+                <th>Question</th>
+                <th>Answers</th>
+                <th>Action</th>
               </tr>
-            ) : questions[0] === undefined ? (
-              <tr>
-                <td colSpan={4}>No Data Available.</td>
-              </tr>
-            ) : (
-              questions.map((question, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <p className={styles.marginBottom}>
-                      {question.questionInEnglish}
-                    </p>
-                    <p>{question.questionInNepali}</p>
-                  </td>
-                  <td>
-                    {question.answers === undefined
-                      ? null
-                      : JSON.parse(question.answers)[0] === undefined
-                      ? null
-                      : JSON.parse(question.answers).map((answer, idx) => (
-                          <div className={styles.marginBottom} key={idx}>
-                            <p className={styles.marginBottom05}>
-                              {answer.answerNumber}. {answer.answerInEnglish}
-                            </p>
-                            <p>
-                              {answer.answerNumber}. {answer.answerInNepali}
-                            </p>
-                          </div>
-                        ))}
-                  </td>
-                  <td>
-                    <div className={styles.actionButton}>
-                      <div
-                        className={styles.edit}
-                        onClick={() => editSurvey(question)}
+            </thead>
+            <Droppable droppableId="tbody">
+              {(provided) => (
+                <tbody ref={provided.innerRef} {...provided.droppableProps}>
+                  {questions === null ? (
+                    <tr>
+                      <td colSpan={4}>Loading...</td>
+                    </tr>
+                  ) : questions[0] === undefined ? (
+                    <tr>
+                      <td colSpan={4}>No Data Available.</td>
+                    </tr>
+                  ) : (
+                    questions.map((question, index) => (
+                      <Draggable
+                        draggableId={`draggable-${index + 1}`}
+                        key={index}
+                        index={index}
                       >
-                        <Image
-                          src={"/edit.svg"}
-                          alt="edit"
-                          height={20}
-                          width={20}
-                          layout="fixed"
-                        />
-                      </div>
-                      <div
-                        className={styles.remove}
-                        onClick={(e) => removeSurvey(index + 1, question.id)}
-                      >
-                        <Image
-                          src={"/remove.svg"}
-                          alt="edit"
-                          height={20}
-                          width={20}
-                          layout="fixed"
-                        />
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                        {(provided) => (
+                          <>
+                            <tr
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                            >
+                              <td {...provided.dragHandleProps}>{index + 1}</td>
+                              <td>
+                                <p className={styles.marginBottom}>
+                                  {question.questionInEnglish}
+                                </p>
+                                <p>{question.questionInNepali}</p>
+                              </td>
+                              <td>
+                                {question.answers === undefined
+                                  ? null
+                                  : JSON.parse(question.answers)[0] ===
+                                    undefined
+                                  ? null
+                                  : JSON.parse(question.answers).map(
+                                      (answer, idx) => (
+                                        <div
+                                          className={styles.marginBottom}
+                                          key={idx}
+                                        >
+                                          <p className={styles.marginBottom05}>
+                                            {answer.answerNumber}.{" "}
+                                            {answer.answerInEnglish}
+                                          </p>
+                                          <p>
+                                            {answer.answerNumber}.{" "}
+                                            {answer.answerInNepali}
+                                          </p>
+                                        </div>
+                                      )
+                                    )}
+                              </td>
+                              <td>
+                                <div className={styles.actionButton}>
+                                  <div
+                                    className={styles.edit}
+                                    onClick={() => editSurvey(question)}
+                                  >
+                                    <Image
+                                      src={"/edit.svg"}
+                                      alt="edit"
+                                      height={20}
+                                      width={20}
+                                      layout="fixed"
+                                    />
+                                  </div>
+                                  <div
+                                    className={styles.remove}
+                                    onClick={(e) =>
+                                      removeSurvey(index + 1, question.id)
+                                    }
+                                  >
+                                    <Image
+                                      src={"/remove.svg"}
+                                      alt="edit"
+                                      height={20}
+                                      width={20}
+                                      layout="fixed"
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            {provided.placeholder}
+                          </>
+                        )}
+                      </Draggable>
+                    ))
+                  )}
+                  {provided.placeholder}
+                </tbody>
+              )}
+            </Droppable>
+          </table>
+        </DragDropContext>
 
         <div className={styles.removePopup} ref={editPopupRef}>
           <div className={styles.hide} onClick={(e) => closeEditSurvey()}></div>

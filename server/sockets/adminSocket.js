@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { escape } = require("mysql");
 
 const config = require("../config/databaseConfig");
+const handleTableUpdates = require("../utils/handleTableUpdates");
 const surveyPermission = require("../utils/surveyPermission");
 const titlePermission = require("../utils/titlePermission");
 const connection = config.connection;
@@ -49,6 +50,7 @@ module.exports = (connectUsers) => {
 
             titlePermission(socket);
             surveyPermission(socket);
+            handleTableUpdates(socket);
 
             return socket.emit("data", user);
           });
