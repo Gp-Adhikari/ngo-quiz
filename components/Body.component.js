@@ -32,6 +32,7 @@ const Body = () => {
 
   const quizHolderRef = useRef(null);
   const answersRef = useRef(null);
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   const [searchedCandidate, setSearchedCandidate] = useState("");
@@ -44,9 +45,45 @@ const Body = () => {
   );
 
   const resultRef = useRef(null);
+  const [isElementVisible, setIsElementVisible] = useState(true);
 
   const [error, setError] = useState("");
 
+  //set setIsElementVisible if element is visible or not
+  useEffect(() => {
+    try {
+      const quizElement = quizHolderRef.current;
+
+      //check if element is inside
+      const isScrolledIntoView = (quizHolderRef, currentQuestion) => {
+        try {
+          const currentElement =
+            quizHolderRef.current.children[currentQuestion];
+          const rect = currentElement.getBoundingClientRect();
+          const mainRect = quizHolderRef.current.getBoundingClientRect();
+          const elemTop = rect.top;
+          const elemBottom = rect.bottom;
+
+          return (
+            elemTop + 80 < mainRect.height + mainRect.top &&
+            elemBottom - 40 >= mainRect.top
+          );
+        } catch (error) {}
+      };
+
+      const onScroll = () =>
+        setIsElementVisible(isScrolledIntoView(quizHolderRef, currentQuestion));
+
+      // clean up code
+      quizElement.removeEventListener("scroll", onScroll);
+      quizElement.addEventListener("scroll", onScroll, {
+        passive: true,
+      });
+      return () => quizElement.removeEventListener("scroll", onScroll);
+    } catch (error) {}
+  }, [quizHolderRef, currentQuestion]);
+
+  //get searched candidates
   const searchedData = (searchedValue) => {
     if (candidates !== null && candidates.length > 0) {
       if (searchedValue.length === 0) {
@@ -67,8 +104,6 @@ const Body = () => {
       if (answersRef === null) return;
 
       const allQuestions = quizHolderRef.current.children;
-
-      console.log(currentQuestion, allQuestions.length);
 
       for (let i = 0; i < allQuestions.length; i++) {
         if (i !== currentQuestion) {
@@ -241,6 +276,33 @@ const Body = () => {
     } catch (error) {}
   };
 
+  //scrollToQuestion
+  const scrollToQuestion = () => {
+    try {
+      if (quizHolderRef === null) return;
+      if (answersRef === null) return;
+
+      const allQuestions = quizHolderRef.current.children;
+
+      for (let i = 0; i < allQuestions.length; i++) {
+        if (i !== currentQuestion) {
+          allQuestions[i].style = `
+          pointer-events: none;
+          opacity: 0.4;
+          `;
+        } else {
+          quizHolderRef.current.scrollTop = allQuestions[i].offsetTop - 120;
+
+          allQuestions[i].style = `
+          pointer-events: all;
+          opacity: 1;
+          `;
+          allQuestions[i].focus();
+        }
+      }
+    } catch (error) {}
+  };
+
   return (
     <div className={styles.wrapper}>
       <section className={styles.mainSection}>
@@ -261,15 +323,24 @@ const Body = () => {
           onSubmit={(e) => submitName(e)}
           ref={formRef}
         >
-          <h1>
+          <div className={styles.presentationText}>
             {presentationText === null ? (
               "Loading..."
-            ) : language === "en" ? (
-              <>{presentationText.presentationTextInEnglish}</>
             ) : (
-              <>{presentationText.presentationTextInNepali}</>
+              <>
+                <h1>
+                  {presentationText.presentationTextInNepali === null
+                    ? ""
+                    : presentationText.presentationTextInNepali}
+                </h1>
+                <h1>
+                  {presentationText.presentationTextInEnglish === null
+                    ? ""
+                    : presentationText.presentationTextInEnglish}
+                </h1>
+              </>
             )}
-          </h1>
+          </div>
           <div className={styles.inputWrapper}>
             <input
               type={"text"}
@@ -348,6 +419,16 @@ const Body = () => {
                     </div>
                   </div>
                 ))}
+          </div>
+          <div
+            className={
+              isElementVisible
+                ? `${styles.gotoQuestion} ${styles.displayNone}`
+                : styles.gotoQuestion
+            }
+            onClick={() => scrollToQuestion()}
+          >
+            <p>Scroll To Question</p>
           </div>
         </div>
       </section>

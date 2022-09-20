@@ -68,7 +68,7 @@ const Header = () => {
       </div>
       {hideElements ? null : (
         <div className={styles.arrow}>
-          <Image src={"/languageArrow.svg"} width={150} height={80} />
+          <Image src={"/languageArrow.svg"} layout="fill" alt="arrow" />
         </div>
       )}
     </header>

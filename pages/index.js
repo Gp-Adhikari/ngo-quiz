@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       {/* <ChooseLanguage /> */}
-      <SEO title={"Home - Choose Your Candidate"} />
+      <SEO title={"Choose Your Candidate"} />
       <Header />
       <Body />
     </>

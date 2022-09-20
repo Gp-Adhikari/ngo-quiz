@@ -7,6 +7,7 @@ const AdminHead = ({ title }) => {
     <Head>
       <title>{actualTitle}</title>
       <link rel="icon" href="/logo.svg" />
+      <meta name="robots" content="noindex, nofollow" />
     </Head>
   );
 };

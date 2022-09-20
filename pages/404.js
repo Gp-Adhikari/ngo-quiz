@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { TokenContext } from "../context/Token.context";
 
 const NotFound = () => {
-  const { setLoading, loading } = useContext(TokenContext);
+  const { setLoading } = useContext(TokenContext);
 
   useEffect(() => {
     setInterval(() => {

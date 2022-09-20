@@ -40,6 +40,8 @@
 }
 
 .arrow {
+  width: 150px;
+  height: 80px;
   user-select: none;
   pointer-events: none;
   margin-top: 1rem;
@@ -53,5 +55,12 @@
   .header {
     margin-left: 1rem;
     margin-right: 1rem;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .arrow {
+    width: 100px;
+    height: 50px;
   }
 }
