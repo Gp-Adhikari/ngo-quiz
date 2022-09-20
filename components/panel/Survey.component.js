@@ -264,9 +264,15 @@ const Survey = () => {
     }
   };
 
+  const [isDragging, setIsDragging] = useState(false);
+
   const handleDragEnd = (results, questions) => {
     try {
-      if (!results.destination) {
+      setIsDragging(false);
+      if (
+        !results.destination ||
+        results.destination.index === results.source.index
+      ) {
         return;
       }
 
@@ -285,6 +291,10 @@ const Survey = () => {
 
       setQuestions(tempQuestions);
     } catch (error) {}
+  };
+
+  const onBeforeDragStart = () => {
+    setIsDragging(true);
   };
 
   return (
@@ -426,6 +436,7 @@ const Survey = () => {
         <h1>Survey Questions</h1>
 
         <DragDropContext
+          onBeforeDragStart={() => onBeforeDragStart()}
           onDragEnd={(results) => handleDragEnd(results, questions)}
         >
           <table>
@@ -456,75 +467,76 @@ const Survey = () => {
                         index={index}
                       >
                         {(provided) => (
-                          <>
-                            <tr
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
+                          <tr
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                          >
+                            <LockedCell
+                              isDragOccurring={isDragging}
+                              extraProps={provided.dragHandleProps}
                             >
-                              <td {...provided.dragHandleProps}>{index + 1}</td>
-                              <td>
-                                <p className={styles.marginBottom}>
-                                  {question.questionInEnglish}
-                                </p>
-                                <p>{question.questionInNepali}</p>
-                              </td>
-                              <td>
-                                {question.answers === undefined
-                                  ? null
-                                  : JSON.parse(question.answers)[0] ===
-                                    undefined
-                                  ? null
-                                  : JSON.parse(question.answers).map(
-                                      (answer, idx) => (
-                                        <div
-                                          className={styles.marginBottom}
-                                          key={idx}
-                                        >
-                                          <p className={styles.marginBottom05}>
-                                            {answer.answerNumber}.{" "}
-                                            {answer.answerInEnglish}
-                                          </p>
-                                          <p>
-                                            {answer.answerNumber}.{" "}
-                                            {answer.answerInNepali}
-                                          </p>
-                                        </div>
-                                      )
-                                    )}
-                              </td>
-                              <td>
-                                <div className={styles.actionButton}>
-                                  <div
-                                    className={styles.edit}
-                                    onClick={() => editSurvey(question)}
-                                  >
-                                    <Image
-                                      src={"/edit.svg"}
-                                      alt="edit"
-                                      height={20}
-                                      width={20}
-                                      layout="fixed"
-                                    />
-                                  </div>
-                                  <div
-                                    className={styles.remove}
-                                    onClick={(e) =>
-                                      removeSurvey(index + 1, question.id)
-                                    }
-                                  >
-                                    <Image
-                                      src={"/remove.svg"}
-                                      alt="edit"
-                                      height={20}
-                                      width={20}
-                                      layout="fixed"
-                                    />
-                                  </div>
+                              {index + 1}
+                            </LockedCell>
+                            <LockedCell isDragOccurring={isDragging}>
+                              <p className={styles.marginBottom}>
+                                {question.questionInEnglish}
+                              </p>
+                              <p>{question.questionInNepali}</p>
+                            </LockedCell>
+                            <LockedCell isDragOccurring={isDragging}>
+                              {question.answers === undefined
+                                ? null
+                                : JSON.parse(question.answers)[0] === undefined
+                                ? null
+                                : JSON.parse(question.answers).map(
+                                    (answer, idx) => (
+                                      <div
+                                        className={styles.marginBottom}
+                                        key={idx}
+                                      >
+                                        <p className={styles.marginBottom05}>
+                                          {answer.answerNumber}.{" "}
+                                          {answer.answerInEnglish}
+                                        </p>
+                                        <p>
+                                          {answer.answerNumber}.{" "}
+                                          {answer.answerInNepali}
+                                        </p>
+                                      </div>
+                                    )
+                                  )}
+                            </LockedCell>
+                            <LockedCell isDragOccurring={isDragging}>
+                              <div className={styles.actionButton}>
+                                <div
+                                  className={styles.edit}
+                                  onClick={() => editSurvey(question)}
+                                >
+                                  <Image
+                                    src={"/edit.svg"}
+                                    alt="edit"
+                                    height={20}
+                                    width={20}
+                                    layout="fixed"
+                                  />
                                 </div>
-                              </td>
-                            </tr>
-                            {provided.placeholder}
-                          </>
+                                <div
+                                  className={styles.remove}
+                                  onClick={(e) =>
+                                    removeSurvey(index + 1, question.id)
+                                  }
+                                >
+                                  <Image
+                                    src={"/remove.svg"}
+                                    alt="edit"
+                                    height={20}
+                                    width={20}
+                                    layout="fixed"
+                                  />
+                                </div>
+                              </div>
+                            </LockedCell>
+                          </tr>
                         )}
                       </Draggable>
                     ))
@@ -728,5 +740,74 @@ const Survey = () => {
     </>
   );
 };
+
+class LockedCell extends React.Component {
+  ref;
+
+  getSnapshotBeforeUpdate(prevProps) {
+    if (!this.ref) {
+      return null;
+    }
+
+    const isDragStarting =
+      this.props.isDragOccurring && !prevProps.isDragOccurring;
+
+    if (!isDragStarting) {
+      return null;
+    }
+
+    const { width, height } = this.ref.getBoundingClientRect();
+
+    const snapshot = {
+      width,
+      height,
+    };
+
+    return snapshot;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const ref = this.ref;
+    if (!ref) {
+      return;
+    }
+
+    if (snapshot) {
+      if (ref.style.width === snapshot.width) {
+        return;
+      }
+
+      ref.style.minWidth = `${snapshot.width}px`;
+      ref.style.maxWidth = `${snapshot.width}px`;
+      ref.style.width = `${snapshot.width}px`;
+      ref.style.height = `${snapshot.height}px`;
+      return;
+    }
+
+    if (this.props.isDragOccurring) {
+      return;
+    }
+
+    // inline styles not applied
+    if (ref.style.width == null) {
+      return;
+    }
+
+    // no snapshot and drag is finished - clear the inline styles
+    ref.removeAttribute("style");
+  }
+
+  setRef = (ref) => {
+    this.ref = ref;
+  };
+
+  render() {
+    return (
+      <td ref={this.setRef} {...this.props.extraProps}>
+        {this.props.children}
+      </td>
+    );
+  }
+}
 
 export default Survey;
