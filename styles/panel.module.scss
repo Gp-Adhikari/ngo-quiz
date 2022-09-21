@@ -745,6 +745,31 @@
         border-radius: 0 0 5px 5px;
         padding: 1rem;
 
+        .addAnswerWrapper {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .addAnswer {
+          max-width: 150px;
+          width: 100%;
+          font-size: 1.5rem;
+          font-weight: bold;
+          border-radius: 5px;
+          border: none;
+          color: $light;
+          background-color: lighten(green, 10%);
+          padding: 0.3rem 1.2rem;
+          transition: 0.2s ease;
+          cursor: pointer;
+
+          &:hover {
+            background-color: lighten(green, 5%);
+          }
+        }
+
         .inputs {
           > p {
             margin-bottom: 0.5rem;
@@ -753,9 +778,26 @@
           }
 
           .actualInputs {
+            position: relative;
             background-color: darken($light, 5%);
             padding: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+
+            button {
+              padding: 0.5rem 1.2rem;
+              margin-top: 0.5rem;
+              border-radius: 5px;
+              border: none;
+              background-color: darken($main, 10%);
+              font-weight: bold;
+              transition: 0.2s ease;
+              color: $light;
+              cursor: pointer;
+
+              &:hover {
+                background-color: darken($main, 20%);
+              }
+            }
 
             .inputHolder {
               margin-bottom: 0.5rem;
@@ -809,6 +851,46 @@
 
             &:first-child {
               margin-right: 1rem;
+              background-color: darken($main, 10%);
+              font-weight: bold;
+              transition: 0.2s ease;
+              color: $light;
+              border: 1px solid darken($main, 10%);
+
+              &:hover {
+                background-color: darken($main, 20%);
+                border: 1px solid darken($main, 20%);
+              }
+            }
+          }
+        }
+
+        .editButtons {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 1rem;
+
+          button {
+            width: 100%;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+
+            &:last-child {
+              background-color: transparent;
+              border: 1px solid black;
+              transition: 0.2s ease;
+
+              &:hover {
+                background-color: darken($light, 2%);
+              }
+            }
+
+            &:first-child {
               background-color: darken($main, 10%);
               font-weight: bold;
               transition: 0.2s ease;

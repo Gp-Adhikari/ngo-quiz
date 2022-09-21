@@ -297,6 +297,36 @@ const Survey = () => {
     setIsDragging(true);
   };
 
+  //remove answer from edit popup
+  const removeAnswerFromEditedSurvey = (answer, editedSurvey) => {
+    const modifiedSurveyAnswer = editedSurvey.answers.filter((obj) => {
+      return obj.answerNumber !== answer.answerNumber;
+    });
+
+    setEditedSurvey((prevState) => ({
+      ...prevState,
+      answers: modifiedSurveyAnswer,
+    }));
+  };
+
+  //add New Answer To Edited Survey
+  const addNewAnswerToEditedSurvey = () => {
+    setEditedSurvey((prevState) => ({
+      ...prevState,
+      answers: [
+        ...prevState.answers,
+        {
+          answerInEnglish: "",
+          answerInNepali: "",
+          answerNumber:
+            editedSurvey.answers[editedSurvey.answers.length - 1].answerNumber +
+            1,
+          points: "0",
+        },
+      ],
+    }));
+  };
+
   return (
     <>
       <AdminHead title="Survey" />
@@ -605,13 +635,10 @@ const Survey = () => {
               <div className={styles.inputs}>
                 <p>Answers</p>
                 {editedSurvey.answers[0] !== undefined &&
-                  editedSurvey.answers.map((answer) => (
-                    <div
-                      className={styles.actualInputs}
-                      key={answer.answerNumber}
-                    >
+                  editedSurvey.answers.map((answer, index) => (
+                    <div className={styles.actualInputs} key={index}>
                       <div className={styles.inputHolder}>
-                        <h4>Answer {answer.answerNumber}</h4>
+                        <h4>Answer {index + 1}</h4>
                         <p>English</p>
                         <textarea
                           value={answer.answerInEnglish}
@@ -674,10 +701,26 @@ const Survey = () => {
                           }}
                         />
                       </div>
+
+                      <button
+                        onClick={() =>
+                          removeAnswerFromEditedSurvey(answer, editedSurvey)
+                        }
+                      >
+                        Remove
+                      </button>
                     </div>
                   ))}
+                <div className={styles.addAnswerWrapper}>
+                  <button
+                    className={styles.addAnswer}
+                    onClick={() => addNewAnswerToEditedSurvey()}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-              <div className={styles.buttons}>
+              <div className={styles.editButtons}>
                 <button
                   onClick={() => {
                     updateSurvey(editedSurvey);

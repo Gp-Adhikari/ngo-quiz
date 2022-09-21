@@ -684,15 +684,52 @@
   border-radius: 0 0 5px 5px;
   padding: 1rem;
 }
+.tableContainer .removePopup .popup .popupContent .addAnswerWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tableContainer .removePopup .popup .popupContent .addAnswer {
+  max-width: 150px;
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  background-color: #00b300;
+  padding: 0.3rem 1.2rem;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+.tableContainer .removePopup .popup .popupContent .addAnswer:hover {
+  background-color: #009a00;
+}
 .tableContainer .removePopup .popup .popupContent .inputs > p {
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
   font-weight: bold;
 }
 .tableContainer .removePopup .popup .popupContent .inputs .actualInputs {
+  position: relative;
   background-color: #f2f2f2;
   padding: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs button {
+  padding: 0.5rem 1.2rem;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #ef4539;
+  font-weight: bold;
+  transition: 0.2s ease;
+  color: #fff;
+  cursor: pointer;
+}
+.tableContainer .removePopup .popup .popupContent .inputs .actualInputs button:hover {
+  background-color: #e32012;
 }
 .tableContainer .removePopup .popup .popupContent .inputs .actualInputs .inputHolder {
   margin-bottom: 0.5rem;
@@ -743,6 +780,40 @@
   border: 1px solid #ef4539;
 }
 .tableContainer .removePopup .popup .popupContent .buttons button:first-child:hover {
+  background-color: #e32012;
+  border: 1px solid #e32012;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons button {
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons button:last-child {
+  background-color: transparent;
+  border: 1px solid black;
+  transition: 0.2s ease;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons button:last-child:hover {
+  background-color: #fafafa;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons button:first-child {
+  background-color: #ef4539;
+  font-weight: bold;
+  transition: 0.2s ease;
+  color: #fff;
+  border: 1px solid #ef4539;
+}
+.tableContainer .removePopup .popup .popupContent .editButtons button:first-child:hover {
   background-color: #e32012;
   border: 1px solid #e32012;
 }
