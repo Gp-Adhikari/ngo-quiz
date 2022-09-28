@@ -21,7 +21,7 @@ var _getPageFiles = __webpack_require__(4140);
 var _htmlescape = __webpack_require__(9716);
 var _isError = _interopRequireDefault(__webpack_require__(676));
 var _htmlContext = __webpack_require__(8743);
-class Document extends _react.Component {
+class Document extends _react.default.Component {
     /**
    * `getInitialProps` hook returns the context object with the addition of `renderPage`.
    * `renderPage` callback executes `React` rendering logic synchronously to support server-rendering wrappers
@@ -111,7 +111,8 @@ function AmpStyles({ styles  }) {
     if (!styles) return null;
     // try to parse styles from fragment for backwards compat
     const curStyles = Array.isArray(styles) ? styles : [];
-    if (styles.props && Array.isArray(styles.props.children)) {
+    if (styles.props && // @ts-ignore Property 'props' does not exist on type ReactElement
+    Array.isArray(styles.props.children)) {
         const hasStyles = (el)=>{
             var ref, ref1;
             return el == null ? void 0 : (ref = el.props) == null ? void 0 : (ref1 = ref.dangerouslySetInnerHTML) == null ? void 0 : ref1.__html;
@@ -252,7 +253,7 @@ function getHeadHTMLProps(props) {
 function getAmpPath(ampPath, asPath) {
     return ampPath || `${asPath}${asPath.includes("?") ? "&" : "?"}amp=1`;
 }
-class Head extends _react.Component {
+class Head extends _react.default.Component {
     static contextType = _htmlContext.HtmlContext;
     getCssLinks(files) {
         const { assetPrefix , devOnlyCacheBusterQueryString , dynamicImports , crossOrigin , optimizeCss , optimizeFonts ,  } = this.context;
@@ -508,7 +509,8 @@ class Head extends _react.Component {
             "data-n-css": (_nonce = this.props.nonce) != null ? _nonce : ""
         }), !disableRuntimeJS && !disableJsPreload && this.getPreloadDynamicChunks(), !disableRuntimeJS && !disableJsPreload && this.getPreloadMainLinks(files), !disableOptimizedLoading && !disableRuntimeJS && this.getPolyfillScripts(), !disableOptimizedLoading && !disableRuntimeJS && this.getPreNextScripts(), !disableOptimizedLoading && !disableRuntimeJS && this.getDynamicChunks(files), !disableOptimizedLoading && !disableRuntimeJS && this.getScripts(files), optimizeCss && this.getCssLinks(files), optimizeCss && /*#__PURE__*/ _react.default.createElement("noscript", {
             "data-n-css": (_nonce1 = this.props.nonce) != null ? _nonce1 : ""
-        }), this.context.isDevelopment && // ordering matches production
+        }), this.context.isDevelopment && // this element is used to mount development styles so the
+        // ordering matches production
         // (by default, style-loader injects at the bottom of <head />)
         /*#__PURE__*/ _react.default.createElement("noscript", {
             id: "__next_css__DO_NOT_USE__"
@@ -558,7 +560,7 @@ function handleDocumentScriptLoaderItems(scriptLoader, __NEXT_DATA__, props) {
     });
     __NEXT_DATA__.scriptLoader = scriptLoaderItems;
 }
-class NextScript extends _react.Component {
+class NextScript extends _react.default.Component {
     static contextType = _htmlContext.HtmlContext;
     getDynamicChunks(files) {
         return getDynamicChunks(this.context, this.props, files);

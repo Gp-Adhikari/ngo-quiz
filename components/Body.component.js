@@ -380,9 +380,9 @@ const Body = () => {
 
           <div className={styles.quizHolder} ref={quizHolderRef}>
             {questions === null
-              ? "No Data"
-              : questions[0] === undefined
               ? "Loading..."
+              : questions[0] === undefined
+              ? "No Data"
               : questions.map((data, idx) => (
                   <div className={styles.quiz} key={idx}>
                     <div className={styles.questionWrapper}>

@@ -30,27 +30,34 @@ const TokenContextProvider = ({ children }) => {
 
   const [language, setLanguage] = useState("en");
 
-  //get token every 12 minutes
+  //get token every 8 minutes
   const MINUTE_MS = 1000 * 60 * 8;
 
   useEffect(() => {
     try {
       if (token !== "" || token !== undefined || token !== null) {
         const interval = setInterval(() => {
-          fetch("/token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-          })
+          fetch("/api/csrf")
             .then((res) => res.json())
-            .then((data) => {
-              if (data.status === true) {
-                setToken(data.token);
-              } else {
-                setToken("");
-              }
+            .then((response) => {
+              if (!response.status) return;
+
+              fetch("/token", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "xsrf-token": response.csrfToken,
+                },
+                credentials: "include",
+              })
+                .then((res) => res.json())
+                .then((data) => {
+                  if (data.status === true) {
+                    setToken(data.token);
+                  } else {
+                    setToken("");
+                  }
+                });
             });
         }, MINUTE_MS);
 
@@ -85,25 +92,34 @@ const TokenContextProvider = ({ children }) => {
   useEffect(() => {
     try {
       setLoading(true);
-      fetch("/token", {
-        method: "POST",
-        credentials: "include",
-      })
+      fetch("/api/csrf")
         .then((res) => res.json())
-        .then((data) => {
-          if (data.status === true) {
-            setToken(data.token);
-            setAdminSocket(
-              io.connect("/connect", {
-                transports: ["websocket"],
-                auth: {
-                  token: `Bearer ${data.token}`,
-                },
-              })
-            );
-          } else {
-            setToken(null);
-          }
+        .then((response) => {
+          if (!response.status) return;
+
+          fetch("/token", {
+            method: "POST",
+            headers: {
+              "xsrf-token": response.csrfToken,
+            },
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data.status === true) {
+                setToken(data.token);
+                setAdminSocket(
+                  io.connect("/connect", {
+                    transports: ["websocket"],
+                    auth: {
+                      token: `Bearer ${data.token}`,
+                    },
+                  })
+                );
+              } else {
+                setToken(null);
+              }
+            });
         });
     } catch (error) {}
   }, [setToken]);

@@ -125,11 +125,9 @@ router.delete("/logout", (req, res) => {
   try {
     const rt = escape(req.cookies.rt);
 
-    const removeCookie = `UPDATE admins SET cookie = NULL WHERE cookie = ${rt};`;
-
-    connection.query(removeCookie);
-
     res.clearCookie("rt");
+    const removeCookie = `UPDATE admins SET cookie = NULL WHERE cookie = ${rt};`;
+    connection.query(removeCookie);
 
     return res.json({
       status: true,

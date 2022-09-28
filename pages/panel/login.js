@@ -50,10 +50,14 @@ const Admin = () => {
 
       setLoading(true);
 
+      const csrfToken = await fetch("/api/csrf");
+      const csrfResult = await csrfToken.json();
+
       const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "xsrf-token": csrfResult.csrfToken,
         },
         body: JSON.stringify({
           username: username,

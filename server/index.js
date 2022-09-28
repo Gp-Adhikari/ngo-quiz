@@ -36,13 +36,13 @@ nextApp.prepare().then(() => {
   //compression
   app.use(compression());
 
-  //csrf protection
-  // app.use(csrf({ cookie: { httpOnly: true, secure: false } }));
+  // //csrf protection
+  app.use(csrf({ cookie: { httpOnly: true, secure: false } }));
 
-  // get csrf token
-  // app.get("/api/csrf", (req, res) => {
-  //   return res.status(200).json({ status: true, csrfToken: req.csrfToken() });
-  // });
+  // // get csrf token
+  app.get("/api/csrf", (req, res) => {
+    return res.status(200).json({ status: true, csrfToken: req.csrfToken() });
+  });
 
   app.get("*", (req, res) => {
     return handle(req, res);

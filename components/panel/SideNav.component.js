@@ -17,15 +17,24 @@ const SideNav = (props, ref) => {
     try {
       setLoading(true);
 
-      fetch("/logout", {
-        method: "DELETE",
-        credentials: "include",
-      })
+      fetch("/api/csrf")
         .then((res) => res.json())
-        .then((data) => {
-          setLoading(false);
-          setToken("");
-          router.replace("/panel/login");
+        .then((response) => {
+          if (!response.status) return;
+
+          fetch("/logout", {
+            method: "DELETE",
+            headers: {
+              "xsrf-token": response.csrfToken,
+            },
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              setLoading(false);
+              setToken("");
+              router.replace("/panel/login");
+            });
         });
     } catch (error) {}
   };
