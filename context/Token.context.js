@@ -28,7 +28,7 @@ const TokenContextProvider = ({ children }) => {
   const [sortedCandidates, setSortedCandidates] = useState(null);
   const [sortBy, setSortBy] = useState("");
 
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("np");
 
   //get token every 8 minutes
   const MINUTE_MS = 1000 * 60 * 8;

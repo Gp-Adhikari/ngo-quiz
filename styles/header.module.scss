@@ -58,6 +58,12 @@
   }
 }
 
+@media screen and (max-height: 768px) {
+  .title {
+    font-size: 14px;
+  }
+}
+
 @media screen and (max-width: 730px) {
   .arrow {
     width: 100px;

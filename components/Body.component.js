@@ -49,6 +49,14 @@ const Body = () => {
 
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    try {
+      if (!isElementVisible) {
+        new Audio("/ting.mp3").play();
+      }
+    } catch (error) {}
+  }, [isElementVisible]);
+
   //set setIsElementVisible if element is visible or not
   useEffect(() => {
     try {
@@ -72,7 +80,11 @@ const Body = () => {
       };
 
       const onScroll = () =>
-        setIsElementVisible(isScrolledIntoView(quizHolderRef, currentQuestion));
+        setTimeout(() => {
+          setIsElementVisible(
+            isScrolledIntoView(quizHolderRef, currentQuestion)
+          );
+        }, 600);
 
       // clean up code
       quizElement.removeEventListener("scroll", onScroll);
@@ -87,12 +99,17 @@ const Body = () => {
   const searchedData = (searchedValue) => {
     if (candidates !== null && candidates.length > 0) {
       if (searchedValue.length === 0) {
-        setReturnedSearchedCandidateValue([]);
+        setTimeout(() => {
+          setReturnedSearchedCandidateValue([null]);
+        }, 200);
       } else {
         const value = candidates.filter((str) => {
           return str.name.toLowerCase().includes(searchedValue.toLowerCase());
         });
-        setReturnedSearchedCandidateValue(value);
+        if (value[0] === undefined) {
+          return setReturnedSearchedCandidateValue([null]);
+        }
+        return setReturnedSearchedCandidateValue(value);
       }
     }
   };
@@ -141,8 +158,20 @@ const Body = () => {
         return;
       }
 
-      if (candidateName.length < 2) {
+      if (candidateName.length < 3) {
         setError("minLimit");
+        return;
+      }
+
+      const flname = candidateName.split(" ");
+
+      if (
+        flname[0] === "" ||
+        flname[1] === "" ||
+        flname[0] === undefined ||
+        flname[1] === undefined
+      ) {
+        setError("fullname");
         return;
       }
 
@@ -196,7 +225,7 @@ const Body = () => {
         const answer = answersOfTheQuestion[i].children[1].innerText;
 
         if (answer === ans) {
-          answersOfTheQuestion[i].style.backgroundColor = "#00ff55";
+          answersOfTheQuestion[i].style.backgroundColor = "#d1d1d1";
           answersOfTheQuestion[i].children[0].children[0].style.opacity = "1";
 
           setSelectedAnswers([
@@ -347,19 +376,35 @@ const Body = () => {
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
               placeholder={
-                language === "en" ? "Candidate's Name" : "उम्मेदवारको नाम"
+                language === "en"
+                  ? "Candidate's Name ( First Name & Last Name )"
+                  : "उम्मेदवारको नाम ( नाम र थर )"
               }
             />
-            {error === "maxLimit" ? (
+            {error === "fullname" ? (
               <p className={styles.error}>
-                *Candidate&apos;s Name cannot be more than 100 characters.
+                {language === "en"
+                  ? "*Candidate's first name and last name is required."
+                  : "*उम्मेदवारको नाम र थर आवश्यक छ।"}
+              </p>
+            ) : error === "maxLimit" ? (
+              <p className={styles.error}>
+                {language === "en"
+                  ? "*Candidate's Name cannot be more than 100 characters."
+                  : "*उम्मेदवारको नाम 100 वर्ण भन्दा बढी हुनु हुँदैन।"}
               </p>
             ) : error === "minLimit" ? (
               <p className={styles.error}>
-                *Candidate&apos;s Name cannot be less than 2 characters.
+                {language === "en"
+                  ? "*Candidate's Name cannot be less than 3 characters."
+                  : "*उम्मेदवारको नाम 3 वर्ण भन्दा कम हुनु हुँदैन।"}
               </p>
             ) : error === "empty" ? (
-              <p className={styles.error}>*Field cannot be empty.</p>
+              <p className={styles.error}>
+                {language === "en"
+                  ? "*Candidate's Name is required."
+                  : "*उम्मेदवारको नाम आवश्यक छ।"}
+              </p>
             ) : null}
           </div>
           <button onClick={(e) => submitName(e)}>
@@ -371,12 +416,14 @@ const Body = () => {
       <section className={styles.quizContainer} ref={quizContainerRef}>
         <div className={styles.displayQuestionNumber}>
           <h2>
-            Question {currentQuestion + 1} /{" "}
+            {language === "en" ? "Question" : "प्रश्न"} {currentQuestion + 1} /{" "}
             {questions === null ? 1 : questions.length}
           </h2>
         </div>
         <div className={styles.quizWrapper}>
-          <h4>Candidate: {candidateName}</h4>
+          <h4>
+            {language === "en" ? "Candidate" : "उम्मेदवार"}: {candidateName}
+          </h4>
 
           <div className={styles.quizHolder} ref={quizHolderRef}>
             {questions === null
@@ -428,13 +475,17 @@ const Body = () => {
             }
             onClick={() => scrollToQuestion()}
           >
-            <p>Scroll To Question</p>
+            <p>
+              {language === "en"
+                ? "*Respond to previous question"
+                : "*अघिल्लो प्रश्नको जवाफ दिनुहोस्"}
+            </p>
           </div>
         </div>
       </section>
       <div className={styles.result} ref={resultRef}>
         <div className={styles.displayQuestionNumber}>
-          <h2>Result</h2>
+          <h2>{language === "en" ? "Result" : "परिणाम"}</h2>
         </div>
 
         <div className={styles.retakeSurveyContainer}>
@@ -444,14 +495,16 @@ const Body = () => {
               handleRetakeSurvey();
             }}
           >
-            Retake the Survey
+            {language === "en"
+              ? "Assess another candidate"
+              : "आर्को उम्मेदवारको मूल्यांकन गर्ने"}
           </button>
         </div>
 
         <div className={styles.resultContainer}>
           <div>
             <div className={styles.candidate}>
-              <h2>Your Score:</h2>
+              <h2>{language === "en" ? "Your Score:" : "तपाईको अंक:"}</h2>
               <h3>{candidateName}</h3>
               <div className={styles.percentage}>
                 <div className={styles.percent}>{percentage}</div>
@@ -460,7 +513,7 @@ const Body = () => {
             </div>
 
             <div className={styles.candidate}>
-              <h2>Average Score:</h2>
+              <h2>{language === "en" ? "Average Score:" : "औसत अंक:"}</h2>
               <div className={styles.percentage}>
                 <h3>{candidateName}</h3>
                 <div className={styles.percent}>
@@ -482,7 +535,7 @@ const Body = () => {
                   <p style={{ color: "lightgreen" }}>Outstanding</p>
                 ) : null}
                 <p>
-                  Total Survey:{" "}
+                  {language === "en" ? "Total Survey:" : "कुल सर्वेक्षण:"}{" "}
                   {candidate !== null ? candidate.timesSearched : "Loading..."}
                 </p>
               </div>
@@ -492,7 +545,11 @@ const Body = () => {
             <div className={styles.candidate}>
               <input
                 type={"text"}
-                placeholder="+ Compare"
+                placeholder={
+                  language === "en"
+                    ? "+ Compare"
+                    : "+ तुलना गर्न उम्मेदवारको नाम रख्नुहोस।"
+                }
                 value={searchedCandidate}
                 onChange={(e) => {
                   setSearchedCandidate(e.target.value);
@@ -507,30 +564,35 @@ const Body = () => {
                       : `${styles.compareCandidateHolder} ${styles.compareCandidateHolderTransition}`
                   }
                 >
-                  <h3>Search Terms</h3>
-                  {returnedSearchedCandidateValue[0] !== undefined
-                    ? returnedSearchedCandidateValue.map((searched, index) => (
-                        <div
-                          className={styles.returnedSearchedValue}
-                          key={index}
-                          onClick={() => {
-                            setSelectedComapareCandidates(
-                              [
-                                ...selectedComapareCandidates,
-                                searched,
-                              ].reverse()
-                            );
+                  <h3>{language === "en" ? "Search Terms" : "खोज सर्तहरू"}</h3>
+                  {returnedSearchedCandidateValue[0] === null ? (
+                    <div className={styles.returnedSearchedValue}>
+                      <p style={{ textAlign: "center" }}>
+                        {language === "en"
+                          ? "No data found."
+                          : "कुनै डाटा फेला परेन"}
+                      </p>
+                    </div>
+                  ) : returnedSearchedCandidateValue[0] !== undefined ? (
+                    returnedSearchedCandidateValue.map((searched, index) => (
+                      <div
+                        className={styles.returnedSearchedValue}
+                        key={index}
+                        onClick={() => {
+                          setSelectedComapareCandidates(
+                            [...selectedComapareCandidates, searched].reverse()
+                          );
 
-                            setSearchedCandidate("");
-                            searchedData("");
-                          }}
-                        >
-                          <p>
-                            {index + 1}. {searched.name}
-                          </p>
-                        </div>
-                      ))
-                    : null}
+                          setSearchedCandidate("");
+                          searchedData("");
+                        }}
+                      >
+                        <p>
+                          {index + 1}. {searched.name}
+                        </p>
+                      </div>
+                    ))
+                  ) : null}
                 </div>
               )}
             </div>
@@ -539,7 +601,7 @@ const Body = () => {
               ? null
               : selectedComapareCandidates.map((selected, index) => (
                   <div className={styles.candidate} key={index}>
-                    <h2>Average Score:</h2>
+                    <h2>{language === "en" ? "Average Score:" : "औसत अंक:"}</h2>
                     <div className={styles.percentage}>
                       <h3>{selected.name}</h3>
                       <div className={styles.percent}>
@@ -563,7 +625,7 @@ const Body = () => {
                         <p style={{ color: "lightgreen" }}>Outstanding</p>
                       ) : null}
                       <p>
-                        Total Survey:{" "}
+                        {language === "en" ? "Total Survey:" : "कुल सर्वेक्षण:"}{" "}
                         {selected !== null
                           ? selected.timesSearched
                           : "Loading..."}
