@@ -56,62 +56,64 @@ const DataContextProvider = ({ children }) => {
 
         setPercentage(total);
 
-        //get localStorageSavedCandidates if available
-        const lsData = localStorage.getItem("savedCandidates");
+        try {
+          //get localStorageSavedCandidates if available
+          const lsData = localStorage.getItem("savedCandidates");
 
-        if (lsData != null) {
-          const totalSavedCandidates = 10;
+          if (lsData != null) {
+            const totalSavedCandidates = 10;
 
-          const lsDataInArray = JSON.parse(lsData);
-          const filteredLsDataArray = lsDataInArray.filter((el) => {
-            return (
-              el.candidateName.toLowerCase() !== candidateName.toLowerCase()
-            );
-          });
+            const lsDataInArray = JSON.parse(lsData);
+            const filteredLsDataArray = lsDataInArray.filter((el) => {
+              return (
+                el.candidateName.toLowerCase() !== candidateName.toLowerCase()
+              );
+            });
 
-          //if totalSavedCandidates
-          if (filteredLsDataArray.length >= totalSavedCandidates) {
-            filteredLsDataArray.shift();
-            const newLsDataArray = [
-              ...filteredLsDataArray,
-              {
-                candidateName: candidateName,
-                score: total,
-              },
-            ];
-            localStorage.setItem(
-              "savedCandidates",
-              JSON.stringify(newLsDataArray)
-            );
+            //if totalSavedCandidates
+            if (filteredLsDataArray.length >= totalSavedCandidates) {
+              filteredLsDataArray.shift();
+              const newLsDataArray = [
+                ...filteredLsDataArray,
+                {
+                  candidateName: candidateName,
+                  score: total,
+                },
+              ];
+              localStorage.setItem(
+                "savedCandidates",
+                JSON.stringify(newLsDataArray)
+              );
 
-            setEditedLocalStorage(newLsDataArray);
+              setEditedLocalStorage(newLsDataArray);
+            } else {
+              const newLsDataArray = [
+                ...filteredLsDataArray,
+                {
+                  candidateName: candidateName,
+                  score: total,
+                },
+              ];
+
+              localStorage.setItem(
+                "savedCandidates",
+                JSON.stringify(newLsDataArray)
+              );
+              setEditedLocalStorage(newLsDataArray);
+            }
           } else {
-            const newLsDataArray = [
-              ...filteredLsDataArray,
-              {
-                candidateName: candidateName,
-                score: total,
-              },
-            ];
+            const dataToSave = {
+              candidateName: candidateName,
+              score: total,
+            };
 
             localStorage.setItem(
               "savedCandidates",
-              JSON.stringify(newLsDataArray)
+              `[${JSON.stringify(dataToSave)}]`
             );
-            setEditedLocalStorage(newLsDataArray);
+            setEditedLocalStorage([dataToSave]);
           }
-        } else {
-          const dataToSave = {
-            candidateName: candidateName,
-            score: total,
-          };
-
-          localStorage.setItem(
-            "savedCandidates",
-            `[${JSON.stringify(dataToSave)}]`
-          );
-          setEditedLocalStorage(newLsDataArray);
-        }
+        } catch (error) {}
 
         if (activeUsersSocket !== null) {
           activeUsersSocket.emit("add-candidate", {
