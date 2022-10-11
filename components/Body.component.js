@@ -7,6 +7,7 @@ import { DataContext } from "../context/Data.context";
 
 import gsap, { Power2 } from "gsap";
 import { TokenContext } from "../context/Token.context";
+import calculateScoreText from "./calculateScoreText";
 
 const Body = () => {
   const {
@@ -507,9 +508,9 @@ const Body = () => {
               <table>
                 <thead>
                   <tr>
-                    <td>SN</td>
-                    <td>Candidate</td>
-                    <td>Your Score</td>
+                    <td>{language === "en" ? "SN" : "नं"}</td>
+                    <td>{language === "en" ? "Candidate" : "उम्मेदवार"}</td>
+                    <td>{language === "en" ? "Your Score" : "तपाईको अंक"}</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -522,7 +523,10 @@ const Body = () => {
                       <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>{el.candidateName}</td>
-                        <td>{el.score}</td>
+                        <td>
+                          <p>{el.score}</p>
+                          {calculateScoreText(el.score)}
+                        </td>
                       </tr>
                     ))
                   ) : null}
