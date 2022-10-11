@@ -328,6 +328,11 @@
 
           h3 {
             text-align: center;
+
+            &:nth-child(2) {
+              margin-top: 0.8rem;
+              font-size: 1rem;
+            }
           }
 
           input {

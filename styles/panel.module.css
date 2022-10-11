@@ -296,6 +296,10 @@
 .panelContainer .changeDataContainer .data .demo .demoPart h3 {
   text-align: center;
 }
+.panelContainer .changeDataContainer .data .demo .demoPart h3:nth-child(2) {
+  margin-top: 0.8rem;
+  font-size: 1rem;
+}
 .panelContainer .changeDataContainer .data .demo .demoPart input {
   width: 100%;
   padding: 1rem;

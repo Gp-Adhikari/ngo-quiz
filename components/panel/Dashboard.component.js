@@ -188,28 +188,7 @@ const Dashboard = () => {
           <button onClick={(e) => changePresentationText(e)}>Submit</button>
 
           <div className={styles.demo}>
-            <p>English</p>
-            <div className={styles.demoPart}>
-              <h3>
-                {presentationTextInEnglish !== ""
-                  ? presentationTextInEnglish
-                  : presentationText !== null &&
-                    presentationText.presentationTextInEnglish !== undefined
-                  ? presentationText.presentationTextInEnglish
-                  : null}
-              </h3>
-              <input type="text" placeholder="Candidate's Name" />
-              <button>
-                <Image
-                  src={"/arrow.svg"}
-                  height={12}
-                  width={12}
-                  layout="fixed"
-                  alt="arrow"
-                />
-              </button>
-            </div>
-            <p>Nepali</p>
+            <p>Demo</p>
             <div className={styles.demoPart}>
               <h3>
                 {presentationTextInNepali !== ""
@@ -219,7 +198,15 @@ const Dashboard = () => {
                   ? presentationText.presentationTextInNepali
                   : null}
               </h3>
-              <input type="text" placeholder="उम्मेदवारको नाम" />
+              <h3>
+                {presentationTextInEnglish !== ""
+                  ? presentationTextInEnglish
+                  : presentationText !== null &&
+                    presentationText.presentationTextInEnglish !== undefined
+                  ? presentationText.presentationTextInEnglish
+                  : null}
+              </h3>
+              <input type="text" placeholder="Candidate's Name" />
               <button>
                 <Image
                   src={"/arrow.svg"}
