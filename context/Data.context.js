@@ -14,6 +14,11 @@ const DataContextProvider = ({ children }) => {
 
   const [qualityText, setQualityText] = useState("");
 
+  const [localStorageSavedCandidates, setLocalStorageSavedCandidates] =
+    useState(undefined);
+
+  const [editedLocalStorage, setEditedLocalStorage] = useState(undefined);
+
   //seperate points
   useEffect(() => {
     try {
@@ -37,14 +42,12 @@ const DataContextProvider = ({ children }) => {
           0
         );
 
-        if (total < 20) {
-          setQualityText(<p style={{ color: "red" }}>Poor</p>);
-        } else if (total < 40) {
-          setQualityText(<p style={{ color: "green" }}>Fair</p>);
+        if (total < 40) {
+          setQualityText(<p style={{ color: "red" }}>Unacceptable</p>);
         } else if (total < 60) {
-          setQualityText(<p style={{ color: "green" }}>Good</p>);
+          setQualityText(<p style={{ color: "red" }}>Bad</p>);
         } else if (total < 80) {
-          setQualityText(<p style={{ color: "lightgreen" }}>Very Good</p>);
+          setQualityText(<p style={{ color: "green" }}>Good</p>);
         } else if (total < 100) {
           setQualityText(<p style={{ color: "lightgreen" }}>Excellent</p>);
         } else if (total >= 100) {
@@ -52,6 +55,63 @@ const DataContextProvider = ({ children }) => {
         }
 
         setPercentage(total);
+
+        //get localStorageSavedCandidates if available
+        const lsData = localStorage.getItem("savedCandidates");
+
+        if (lsData != null) {
+          const totalSavedCandidates = 10;
+
+          const lsDataInArray = JSON.parse(lsData);
+          const filteredLsDataArray = lsDataInArray.filter((el) => {
+            return (
+              el.candidateName.toLowerCase() !== candidateName.toLowerCase()
+            );
+          });
+
+          //if totalSavedCandidates
+          if (filteredLsDataArray.length >= totalSavedCandidates) {
+            filteredLsDataArray.shift();
+            const newLsDataArray = [
+              ...filteredLsDataArray,
+              {
+                candidateName: candidateName,
+                score: total,
+              },
+            ];
+            localStorage.setItem(
+              "savedCandidates",
+              JSON.stringify(newLsDataArray)
+            );
+
+            setEditedLocalStorage(newLsDataArray);
+          } else {
+            const newLsDataArray = [
+              ...filteredLsDataArray,
+              {
+                candidateName: candidateName,
+                score: total,
+              },
+            ];
+
+            localStorage.setItem(
+              "savedCandidates",
+              JSON.stringify(newLsDataArray)
+            );
+            setEditedLocalStorage(newLsDataArray);
+          }
+        } else {
+          const dataToSave = {
+            candidateName: candidateName,
+            score: total,
+          };
+
+          localStorage.setItem(
+            "savedCandidates",
+            `[${JSON.stringify(dataToSave)}]`
+          );
+          setEditedLocalStorage(newLsDataArray);
+        }
 
         if (activeUsersSocket !== null) {
           activeUsersSocket.emit("add-candidate", {
@@ -62,6 +122,15 @@ const DataContextProvider = ({ children }) => {
       }
     }
   }, [percentagePerQuestion, questions]);
+
+  //set setLocalStorageSavedCandidates
+  useEffect(() => {
+    setLocalStorageSavedCandidates(
+      editedLocalStorage !== undefined
+        ? editedLocalStorage.reverse()
+        : editedLocalStorage
+    );
+  }, [editedLocalStorage]);
 
   return (
     <DataContext.Provider
@@ -75,6 +144,7 @@ const DataContextProvider = ({ children }) => {
         setPercentagePerQuestion,
         setPercentage,
         setQualityText,
+        localStorageSavedCandidates,
       }}
     >
       {children}

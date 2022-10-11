@@ -391,6 +391,34 @@
   color: #f37168;
   font-size: 30px;
 }
+.result .candidateHolderTable {
+  background-color: #0e0e1e;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.result .candidateHolderTable table {
+  position: relative;
+  width: 100%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  text-align: center;
+  border-spacing: 0.3rem;
+}
+.result .candidateHolderTable thead td {
+  background-color: #07070f;
+  width: 50px;
+  font-weight: bold;
+  padding: 0.5rem;
+  font-size: 18px;
+}
+.result .candidateHolderTable tbody td {
+  background-color: #16162f;
+  padding: 1rem 0.5rem;
+  max-width: 20px;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+}
 .result .candidate {
   position: relative;
   background-color: #0e0e1e;

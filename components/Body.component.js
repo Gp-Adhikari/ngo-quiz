@@ -14,8 +14,7 @@ const Body = () => {
     setCandidateName,
     selectedAnswers,
     setSelectedAnswers,
-    percentage,
-    qualityText,
+    localStorageSavedCandidates,
   } = useContext(DataContext);
 
   const { language, presentationText, questions, candidate, candidates } =
@@ -49,6 +48,7 @@ const Body = () => {
 
   const [error, setError] = useState("");
 
+  //add ting sound when question is missed
   useEffect(() => {
     try {
       if (!isElementVisible) {
@@ -503,42 +503,31 @@ const Body = () => {
 
         <div className={styles.resultContainer}>
           <div>
-            <div className={styles.candidate}>
-              <h2>{language === "en" ? "Your Score:" : "तपाईको अंक:"}</h2>
-              <h3>{candidateName}</h3>
-              <div className={styles.percentage}>
-                <div className={styles.percent}>{percentage}</div>
-                {qualityText}
-              </div>
-            </div>
-
-            <div className={styles.candidate}>
-              <h2>{language === "en" ? "Average Score:" : "औसत अंक:"}</h2>
-              <div className={styles.percentage}>
-                <h3>{candidateName}</h3>
-                <div className={styles.percent}>
-                  {candidate !== null ? candidate.averageScore : "Loading..."}
-                </div>
-                {candidate === null ? (
-                  "Loading..."
-                ) : candidate.averageScore < 20 ? (
-                  <p style={{ color: "red" }}>Poor</p>
-                ) : candidate.averageScore < 40 ? (
-                  <p style={{ color: "green" }}>Fair</p>
-                ) : candidate.averageScore < 60 ? (
-                  <p style={{ color: "green" }}>Good</p>
-                ) : candidate.averageScore < 80 ? (
-                  <p style={{ color: "lightgreen" }}>Very Good</p>
-                ) : candidate.averageScore < 100 ? (
-                  <p style={{ color: "lightgreen" }}>Excellent</p>
-                ) : candidate.averageScore >= 100 ? (
-                  <p style={{ color: "lightgreen" }}>Outstanding</p>
-                ) : null}
-                <p>
-                  {language === "en" ? "Total Survey:" : "कुल सर्वेक्षण:"}{" "}
-                  {candidate !== null ? candidate.timesSearched : "Loading..."}
-                </p>
-              </div>
+            <div className={styles.candidateHolderTable}>
+              <table>
+                <thead>
+                  <tr>
+                    <td>SN</td>
+                    <td>Candidate</td>
+                    <td>Your Score</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {localStorageSavedCandidates === undefined ? (
+                    <tr>
+                      <td colSpan={3}>No data available</td>
+                    </tr>
+                  ) : localStorageSavedCandidates[0] !== undefined ? (
+                    localStorageSavedCandidates.map((el, idx) => (
+                      <tr key={idx}>
+                        <td>{idx + 1}</td>
+                        <td>{el.candidateName}</td>
+                        <td>{el.score}</td>
+                      </tr>
+                    ))
+                  ) : null}
+                </tbody>
+              </table>
             </div>
           </div>
           <div>
@@ -611,14 +600,12 @@ const Body = () => {
                       </div>
                       {selected === null ? (
                         "Loading..."
-                      ) : selected.averageScore < 20 ? (
-                        <p style={{ color: "red" }}>Poor</p>
                       ) : selected.averageScore < 40 ? (
-                        <p style={{ color: "green" }}>Fair</p>
+                        <p style={{ color: "red" }}>Unacceptable</p>
                       ) : selected.averageScore < 60 ? (
-                        <p style={{ color: "green" }}>Good</p>
+                        <p style={{ color: "red" }}>Bad</p>
                       ) : selected.averageScore < 80 ? (
-                        <p style={{ color: "lightgreen" }}>Very Good</p>
+                        <p style={{ color: "green" }}>Good</p>
                       ) : selected.averageScore < 100 ? (
                         <p style={{ color: "lightgreen" }}>Excellent</p>
                       ) : selected.averageScore >= 100 ? (
